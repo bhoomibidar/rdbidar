@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revenue Department Officers - Bidar District</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #114b74;
+      --secondary-color: #fd7e14;
+      --accent-color: #28a745;
+      --light-bg: #f8f9fa;
+      --card-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      --header-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+    }
+    
+    body {
+      background-color: var(--light-bg);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, var(--primary-color), #0d3a5c);
+      color: white;
+      padding: 20px 0;
+      border-radius: 0 0 20px 20px;
+      box-shadow: var(--header-shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.05)" d="M0,0 L100,0 L100,100 Q50,80 0,100 Z"></path></svg>') no-repeat;
+      background-size: cover;
+      background-position: bottom;
+    }
+    
+    .logo-glow {
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+      transition: all 0.3s ease;
+    }
+    
+    .logo-glow:hover {
+      filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
+      transform: scale(1.05);
+    }
+    
+    .dashboard-card {
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s ease;
+      border: none;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .dashboard-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+      z-index: -1;
+    }
+    
+    .dashboard-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    
+    .dashboard-card h5 {
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+    
+    .tab-buttons .btn {
+      border-radius: 25px;
+      margin: 0 8px 10px;
+      padding: 8px 20px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+    }
+    
+    .tab-buttons .btn.active {
+      background-color: var(--primary-color);
+      color: white;
+      transform: scale(1.05);
+    }
+    
+    .tab-buttons .btn:hover:not(.active) {
+      background-color: rgba(17, 75, 116, 0.1);
+    }
+    
+    .tab-content-section {
+      display: none;
+      background: white;
+      border-radius: 15px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+    
+    .tab-content-section.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .export-btn {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 8px 20px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .export-btn:hover {
+      background-color: #e06d0d;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(253, 126, 20, 0.3);
+    }
+    
+    .officer-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    
+    .officer-table th {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 12px;
+      position: sticky;
+      top: 0;
+    }
+    
+    .officer-table td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .officer-table tr:hover td {
+      background-color: rgba(17, 75, 116, 0.05);
+    }
+    
+    .section-heading {
+      position: relative;
+      margin: 25px 0;
+      text-align: center;
+    }
+    
+    .section-heading h5 {
+      display: inline-block;
+      background: white;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+      font-weight: 700;
+    }
+    
+    .section-heading::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #ddd, transparent);
+      z-index: 0;
+    }
+    
+    .footer {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      margin-top: 40px;
+    }
+    
+    .footer a {
+      color: #ffc107;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .footer a:hover {
+      color: white;
+      text-decoration: underline;
+    }
+    
+    .badge-status {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+    
+    .badge-active {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .tab-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .tab-buttons .btn {
+        margin: 5px;
+        padding: 6px 15px;
+        font-size: 0.9rem;
+      }
+      
+      .dashboard-card {
+        margin-bottom: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header text-center py-4">
+    <div class="container">
+      <img src="assets/img/logo2.png"  height="80" class="mb-3 logo-glow" alt="Karnataka Government Logo">
+      <h5 class="mb-1 fw-bold text-warning">Government of Karnataka</h5>
+      <h2 class="fw-bold mb-0">Bidar District Revenue Department</h2>
+      <p class="mb-0">Officers Contact Directory</p>
+    </div>
+  </div>
+
+  <div class="container mt-4">
+    <!-- Summary Cards -->
+    <div class="row text-center mb-4 g-4">
+      <div class="col-md">
+        <div class="p-3 dashboard-card h-100">
+          <h6 class="fw-bold">Tahsildars</h6>
+          <h5 class="text-primary">8</h5>
+          <p class="text-muted small">Taluk Administration</p>
+          <i class="fas fa-user-tie text-primary opacity-25" style="font-size: 2rem;"></i>
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="p-3 dashboard-card h-100">
+          <h6 class="fw-bold">Grade II Tahsildars</h6>
+          <h5 class="text-primary">8</h5>
+          <p class="text-muted small">Taluk Administration</p>
+          <i class="fas fa-user-cog text-primary opacity-25" style="font-size: 2rem;"></i>
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="p-3 dashboard-card h-100">
+          <h6 class="fw-bold">Deputy Tahsildars</h6>
+          <h5 class="text-primary">30</h5>
+          <p class="text-muted small">Supporting Tahsildars</p>
+          <i class="fas fa-user-shield text-primary opacity-25" style="font-size: 2rem;"></i>
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="p-3 dashboard-card h-100">
+          <h6 class="fw-bold">Revenue Inspectors</h6>
+          <h5 class="text-primary">30</h5>
+          <p class="text-muted small">Field Revenue Operations</p>
+          <i class="fas fa-search text-primary opacity-25" style="font-size: 2rem;"></i>
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="p-3 dashboard-card h-100">
+          <h6 class="fw-bold">Village Accountants</h6>
+          <h5 class="text-primary">216</h5>
+          <p class="text-muted small">Local Revenue Management</p>
+          <i class="fas fa-users text-primary opacity-25" style="font-size: 2rem;"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="d-flex tab-buttons justify-content-center flex-wrap mb-4">
+      <button class="btn active" onclick="showTab('tahsildars')">
+        <i class="fas fa-user-tie me-1"></i> Tahsildars
+      </button>
+      <button class="btn" onclick="showTab('grade2')">
+        <i class="fas fa-user-cog me-1"></i> Grade II
+      </button>
+      <button class="btn" onclick="showTab('deputy')">
+        <i class="fas fa-user-shield me-1"></i> Deputy
+      </button>
+      <button class="btn" onclick="showTab('revenue')">
+        <i class="fas fa-search me-1"></i> Revenue Officers
+      </button>
+      <button class="btn" onclick="showTab('village')">
+        <i class="fas fa-users me-1"></i> Village Accountants
+      </button>
+    </div>
+
+    <!-- Content Sections -->
+    <div id="tahsildars" class="tab-content-section active">
+      <div class="p-4">
+        <button class="btn export-btn mb-3" onclick="exportToExcel('tahsildars')">
+          <i class="fas fa-file-excel me-2"></i>Export to Excel
+        </button>
+        
+        <div class="section-heading">
+          <h5 class="text-primary">
+            <i class="fas fa-user-tie me-2"></i>AC & Tahsildars Directory
+          </h5>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="table officer-table" id="tahsildars-table">
+            <thead>
+              <tr>
+                <th>Taluk</th>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Bidar Division</td><td>Md Shakeel</td><td>9845126966</td><td>acbidar@gmail.com</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Basavkalyan Division</td><td>Prakash Kudari</td><td>9901991334</td><td>acbkalyan@gmail.com</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Aurad</td><td>Mahesh Patil</td><td>7795516277</td><td>tah.aurad@gmail.com</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Bidar</td><td>Ravindra Dama</td><td>9972743266</td><td>-</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Bhalki</td><td>Mallikarjun Waddankere</td><td>9880211640</td><td>tahbhalki@gmail.com</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Basavakalyan</td><td>Dattatreya Gada</td><td>9739463725</td><td>nkarigar825@gmail.com</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Chitguppa</td><td>Manjunath Panchal</td><td>9972787919</td><td>tahasildarctg12@gmail.com</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Humnabad</td><td>Anjum Tabassum</td><td>8884122484</td><td>-</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Hulsoor</td><td>Shivanand Metre</td><td>9108181411</td><td>-</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Kamalnagar</td><td>Amitkumar Kulkani</td><td>9916729555</td><td>Tahkamalnagar@gmail.com</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="grade2" class="tab-content-section">
+      <div class="p-4">
+        <button class="btn export-btn mb-3" onclick="exportToExcel('grade2')">
+          <i class="fas fa-file-excel me-2"></i>Export to Excel
+        </button>
+        
+        <div class="section-heading">
+          <h5 class="text-info">
+            <i class="fas fa-user-cog me-2"></i>Grade II Tahsildars Directory
+          </h5>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="table officer-table" id="grade2-table">
+            <thead>
+              <tr>
+                <th>Taluk</th>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Aurad</td><td>Sangayya Swamy</td><td>9741175824</td><td>dtaurad01@gmail.com</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Bidar</td><td>Md Ziauddin</td><td>9886217868</td><td>-</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Bhalki</td><td>Pallavi Belkire</td><td>8310839596</td><td>dt.blk01@gmail.com</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Basavakalyan</td><td>Milind Kumar</td><td>9448262431</td><td>dt.bak.1@gmail.com</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Chitguppa</td><td>Jayashree</td><td>9900398936</td><td>tahasildarctg12@gmail.com</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Humnabad</td><td>Geeta</td><td>9449992649</td><td>hbad.tah@gamil.com</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Hulsoor</td><td>Sanjeevkumar Bhaire</td><td>9008948716</td><td>tahsildarhulsoor@gmail.com</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+              <tr><td>Kamalnagar</td><td>Gopal Krishna</td><td>9731085733</td><td>-</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="deputy" class="tab-content-section">
+      <div class="p-4">
+        <button class="btn export-btn mb-3" onclick="exportToExcel('deputy')">
+          <i class="fas fa-file-excel me-2"></i>Export to Excel
+        </button>
+        
+        <div class="section-heading">
+          <h5 class="text-warning">
+            <i class="fas fa-user-shield me-2"></i>Deputy Tahsildars Directory
+          </h5>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="table officer-table" id="deputy-table">
+            <thead>
+              <tr>
+                <th>Taluk</th>
+                <th>Hobli</th>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr><td>Basavakalyan</td><td>Rajeshwar</td><td>Sunil Kumar</td><td>9972727777</td><td>dt.bak03@gmail̤com</td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Basavakalyan</td><td>Mudbi</td><td>Amboji Chavan</td><td>9886037640</td><td>dt.bak04@gmail.com</td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Basavakalyan</td><td>Kohinoor</td><td>Shrinivas</td><td>9845858252</td><td>dt.bak005@gmail.com</td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Chitguppa</td><td>Chitguppa</td><td>Rajendra Huggi</td><td>9241895362</td><td>dt.ctg01@gmail.com</td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Chitguppa</td><td>Nirna</td><td>Md Amjad</td><td>9880783197</td><td></td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Chitguppa</td><td>Bemalkheda</td><td>Naseer Ahmad</td><td>8861226980</td><td></td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Humnabad</td><td>Humnabad</td><td>Geeta</td><td>9449992649</td><td>hbad.tah@gamil.com</td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Humnabad</td><td>Dubulgundi</td><td>Muzaffar</td><td>9886861176</td><td></td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Humnabad</td><td>Hallikhed (B)</td><td>Havgi Rao</td><td>9008659566</td><td></td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Hulsoor</td><td>Hulsoor</td><td>Sanjeevkumar Bhaire</td><td>9008948716</td><td>dt.bak06@gmail.com</td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Kamalanagar</td><td>Kamalanagar</td><td>Gopal Krishna</td><td>9731085733</td><td>dt.aur005@gmail.com</td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Kamalanagar</td><td>Thanakushanoor</td><td>Shivanand Navade</td><td>9008834904</td><td>dt.aur04@gmail.com</td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Kamalanagar</td><td>Dabaka</td><td>Somshekar Nilapnor</td><td>8792140701</td><td>dt.aur06@gmail.com</td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+            
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="revenue" class="tab-content-section">
+      <div class="p-4">
+        <button class="btn export-btn mb-3" onclick="exportToExcel('revenue')">
+          <i class="fas fa-file-excel me-2"></i>Export to Excel
+        </button>
+        
+        <div class="section-heading">
+          <h5 class="text-success">
+            <i class="fas fa-search me-2"></i>Revenue Inspectors Directory
+          </h5>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="table officer-table" id="revenue-table">
+            <thead>
+              <tr>
+                <th>Taluk</th>
+                <th>Hobli</th>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr><td>Aurad</td><td>Aurad B</td><td>Rajkumar</td><td>8792255924</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>Chintaki</td><td>Raju Kularni</td><td>8310680348</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>Santhapur</td><td>Balaji</td><td>9481300003</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>Bidar North</td><td>Rameshwar</td><td>9902965547</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>Bidar South</td><td>Rajkumar</td><td>8088876976</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>Bagdal</td><td>Srishail</td><td>8970253545</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>Manhalli</td><td>Nagraj</td><td>6360499376</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>Kamthana</td><td>Iranna</td><td>9535722030</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>Janwad</td><td>Raju</td><td>9986877371</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>Bhalki</td><td>Parasappa</td><td>9901502929</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>Saigaon<td>Rajukumar</td><td>8747803626</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>Nittur B<td>Basavaraj Ugrappnor</td><td>9901270807</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>Khataka Chincholli<td>Prashanth Kote</td><td>9845197280</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>Lakhangaon<td>Sanjukumar</td><td>9008728850</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>Halbarga<td>Yunish Khan</td><td>9986093737</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Basavakalyan</td><td>Basavakalyan<td>Mahesh Kulkarni</td><td>9880341720</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Basavakalyan</td><td>Manthal<td>R Manjunath</td><td>9845709801</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Basavakalyan</td><td>Rajeshwar<td>Umesh</td><td>8762178043</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Basavakalyan</td><td>Mudbi<td>Md Akbar Ali</td><td>8792213011</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Basavakalyan</td><td>Kohinoor<td>Rahuldev Prasad</td><td>9980959996</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Chitguppa</td><td>Chitguppa<td>Maharudra</td><td>7899839587</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Chitguppa</td><td>Nirna<td>Sanjukumar</td><td>9591566521</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Chitguppa</td><td>Bemalkheda<td>Mahesh Anantwadkar</td><td>9448572257</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Humnabad</td><td>Humnabad<td>Shrinath</td><td>8147823376</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Humnabad</td><td>Dubulgundi<td>Jaganath Chanda</td><td>8095428882</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Humnabad</td><td>Hallikhed (B)<td>Mutappa</td><td>9945208399</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Hulsoor</td><td>Hulsoor<td>Sharnbasappa S Pavadashatte</td><td>9483355773</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Kamalanagar</td><td>Kamalanagar<td>Gnyaneshwar</td><td>9108704390</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Kamalanagar</td><td>Thanakushanoor<td>Shivaling Yaragal</td><td>8970475097</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Kamalanagar</td><td>Dabaka<td>Dnyaneshwar Karbari</td><td>9108704390</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="village" class="tab-content-section">
+      <div class="p-4">
+        <button class="btn export-btn mb-3" onclick="exportToExcel('village')">
+          <i class="fas fa-file-excel me-2"></i>Export to Excel
+        </button>
+        
+        <div class="section-heading">
+          <h5 class="text-primary">
+            <i class="fas fa-users me-2"></i>Village Accountants Directory
+          </h5>
+        </div>
+        
+        <div class="table-responsive">
+          <table class="table officer-table" id="village-table">
+            <thead>
+              <tr>
+                <th>Taluk</th>
+                <th>Hobli</th>
+                <th>Village Circle</th>
+                <th>Village</th>
+                <th>VAO Name</th>
+                <th>Contact</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>HUMNABAD</td><td>HUMNABAD</td><td>MALLINATH</td><td>9019398698</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>MANIKNAGAR</td><td>MANIKNAGAR</td><td>MALLINATH</td><td>9019398698</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>MANIKNAGAR</td><td>MOLKERA</td><td>MALLINATH</td><td>9019398698</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>MANIKNAGAR</td><td>GADAWANTI</td><td>MALLINATH</td><td>9019398698</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>HALLIKHED(K)</td><td>HALLIKHED(K)</td><td>SUHASINI</td><td>8197222290</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>HALLIKHED(K)</td><td>MUSTAPUR</td><td>SUHASINI</td><td>8197222290</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>HALLIKHED(K)</td><td>CHITKOTA</td><td>SUHASINI</td><td>8197222290</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>SINDHANKERA</td><td>SINDHANKERA</td><td>KALPANA</td><td>8217399650</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>HANAKUNI</td><td>HANAKUNI</td><td>CHETANA</td><td>7975851451</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>HANAKUNI</td><td>BORAMPALLI</td><td>CHETANA</td><td>7975851451</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>DHUMMANSUR</td><td>DHUMMANSUR</td><td>YALAGOND</td><td>8123456939</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>NANDAGAON</td><td>NANDAGAON</td><td>MAHESH</td><td>9739386687</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>KAPPARGAON</td><td>KAPPARGAON</td><td>MAHESH</td><td>9739386687</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>KALLUR</td><td>KALLUR</td><td>ABDUL AJIJ</td><td>8328319766</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>KALLUR</td><td>KATHALI</td><td>ABDUL AJIJ</td><td>8328319766</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HUMNABAD</td><td>HUDUGI</td><td>HUDUGI</td><td>SANTOSH</td><td>8296161657</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>HALLIKHED (B)</td><td>HALLIKHED (B)</td><td>DHARMANNA</td><td>9845718999</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>HALLIKHED (B)</td><td>NAMDAPUR</td><td>DHARMANNA</td><td>9845718999</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>SITALGERA</td><td>SITALGERA</td><td>SHEKHAR</td><td>9008925238</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>SITALGERA</td><td>NIMBUR</td><td>SHEKHAR</td><td>9008925238</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>MARKHAL</td><td>MARKHAR</td><td>SHEKHAR</td><td>9008925238</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>MARKHAL</td><td>HILALPUR</td><td>SHEKHAR</td><td>9008925238</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>MARKHAL</td><td>SHAKKARGANJ</td><td>SHEKHAR</td><td>9008925238</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>MADARGAON</td><td>MADARGAON</td><td>BHEEMASHANKAR</td><td>9972406069</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>MADARGAON</td><td>MALKAPURWADI</td><td>BHEEMASHANKAR</td><td>9972406069</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>ALLUR</td><td>ALLUR</td><td>BHEEMASHANKAR</td><td>9972406069</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>ALLUR</td><td>BOTHAGI</td><td>BHEEMASHANKAR</td><td>9972406069</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>DAKULGI</td><td>DAKULGI</td><td>SHRISHAIL</td><td>9868809446</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>DAKULGI</td><td>AMEERABAD</td><td>SHRISHAIL</td><td>9868809446</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>SINDABANDAGI</td><td>SINDABANDAGI</td><td>SHRISHAIL</td><td>9868809446</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>SINDABANDAGI</td><td>ATIWAL</td><td>SHRISHAIL</td><td>9868809446</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>BENCHINCHOLI</td><td>BENCHINCHOLI</td><td>SHRISHAIL</td><td>9868809446</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>HALLIKHED (B)</td><td>BENCHINCHOLI</td><td>KABIRABAD</td><td>SHRISHAIL</td><td>9868809446</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>DUBALGUNDI</td><td>DUBALGUNDI</td><td>DILIP</td><td>9686492731</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>MUGNUR</td><td>MUGNUR</td><td>DILIP</td><td>9686492731</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>HANDIKERA</td><td>HANDIKERA</td><td>DILIP</td><td>9686492731</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>HUNASANAL</td><td>HUNASANAL</td><td>DILIP</td><td>9686492731</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>GHODWADI</td><td>GHODWADI</td><td>DILIP</td><td>9686492731</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>HUNASAGERA</td><td>HUNASAGERA</td><td>ADINARAYAN</td><td>9845660696</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>KANAKATTA</td><td>KANAKATTA</td><td>ADINARAYAN</td><td>9845660696</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>SEDOL</td><td>SEDOL</td><td>ADINARAYAN</td><td>9845660696</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>SEDOL</td><td>CHINAKERA</td><td>ADINARAYAN</td><td>9845660696</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>CHANDANHALLI</td><td>CHANDANAHLLI</td><td>MAHANTESH</td><td>8105392600</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>CHANDANHALLI</td><td>SONKERA</td><td>MAHANTESH</td><td>8105392600</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>JALASANGI</td><td>JALASANGI</td><td>MAHANTESH</td><td>8105392600</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>JALASANGI</td><td>WARWATTI(KE)</td><td>MAHANTESH</td><td>8105392600</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>SULTANABAD</td><td>SULTANABAD</td><td>MAHANTESH</td><td>8105392600</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>SULTANABAD</td><td>OTHAGI</td><td>MAHANTESH</td><td>8105392600</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>KUMARCHINCHOLI</td><td>KUMARCHINCHOLI</td><td>GURLINGAPPA</td><td>7338443416</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HUMNABAD</td><td>DUBALGUNDI</td><td>GHATBORAL</td><td>GHATBORAL</td><td>GURLINGAPPA</td><td>7338443416</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>BANDARA KUMATA</td><td>BANDARA KUMATA</td><td>Prajwal</td><td>8296647779</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>BONTI</td><td>LINGI</td><td>Prajwal</td><td>8296647779</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>BAVALAGANVA</td><td>BAVALAGANVA</td><td>Gouramma</td><td>8296258152</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>BAVALAGANVA</td><td>SAVARAGANVA</td><td>Gouramma</td><td>8296258152</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>OWRADABI</td><td>OWRADABI</td><td>Sachin Bise</td><td>8970509230</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>OWRADABI</td><td>MAMADAPURA</td><td>Sachin Bise</td><td>8970509230</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>OWRADABI</td><td>NARAYANAPURA</td><td>Sachin Bise</td><td>8970509230</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>OWRADABI</td><td>GANESHAPURE</td><td>Sachin Bise</td><td>8970509230</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>OWRADABI</td><td>ALLAPURA</td><td>Sachin Bise</td><td>8970509230</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>OWRADABI</td><td>NARASINHAPURA</td><td>Sachin Bise</td><td>8970509230</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>EKALARA</td><td>EKALARA</td><td>Manjula</td><td>9108386722</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>EKALARA</td><td>TULAJAPURA</td><td>Manjula</td><td>9108386722</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>EKALARA</td><td>BORALA</td><td>Manjula</td><td>9108386722</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>BADALAGANVA</td><td>BADALAGANVA</td><td>Anwar Jakati</td><td>8762506078</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>BADALAGANVA</td><td>DUDUKANALA</td><td>Anwar Jakati</td><td>8762506078</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>BADALAGANVA</td><td>VANAMARAPALLI</td><td>Anwar Jakati</td><td>8762506078</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>MUNGANALA</td><td>MUNGANALA</td><td>Vijay</td><td>8152074270</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>MUNGANALA</td><td>KAPPIKERI</td><td>Vijay</td><td>8152074270</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>MUNGANALA</td><td>HASSIKERI</td><td>Vijay</td><td>8152074270</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>MUNGANALA</td><td>KHANDIKERI</td><td>Vijay</td><td>8152074270</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>EKAMBA</td><td>HULLYALA</td><td>Vijay</td><td>8152074270</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>EKAMBA</td><td>EKAMBA</td><td>Vijay</td><td>8152074270</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>EKAMBA</td><td>JAMALAPURA</td><td>Vijay</td><td>8152074270</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>KOLLURA</td><td>KOLLURA</td><td>Anwar Jakati</td><td>8762506078</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>KOLLURA</td><td>JONNIKERI</td><td>Anwar Jakati</td><td>8762506078</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>MASKALA</td><td>MAHADONAGANVA</td><td>Prajwal</td><td>8296647779</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>ENAGUNDA</td><td>TEGAMPURA</td><td>Anwar Jakati</td><td>8762506078</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>KOREKALA</td><td>GOWNDAGANVA</td><td>Prajwal</td><td>8296647779</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>CHINTAKI</td><td>CHINTAKI</td><td>Mallikarjun Allure</td><td>9902006302</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>CHINTAKI</td><td>BELDALA</td><td>Mallikarjun Allure</td><td>9902006302</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>JOJANA</td><td>JOJANA</td><td>Mallikarjun Allure</td><td>9902006302</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>JOJANA</td><td>NAGURAN</td><td>Mallikarjun Allure</td><td>9902006302</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>JOJANA</td><td>LINGADALSHIKH</td><td>Mallikarjun Allure</td><td>9902006302</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>KARANJIBI</td><td>KARANJIBI</td><td>Vishwanth</td><td>9611774027</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>KARANJIBI</td><td>KARANJIKE</td><td>Vishwanth</td><td>9611774027</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>KARANJIBI</td><td>MANURAKE</td><td>Vishwanth</td><td>9611774027</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>RAYAPALLI</td><td>RAYAPALLI</td><td>Sanjeevakumar</td><td>9405670307</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>RAYAPALLI</td><td>NAGANAPALLI</td><td>Sanjeevakumar</td><td>9405670307</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>RAYAPALLI</td><td>LINGADALLI J</td><td>Sanjeevakumar</td><td>9405670307</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>SUNDALA</td><td>SUNDALA</td><td>Chandrakanth</td><td>8970907009</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>SUNDALA</td><td>KHASEMPURAA</td><td>Chandrakanth</td><td>8970907009</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>UJANI</td><td>UJANI</td><td>Babu</td><td>9686688356</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>UJANI</td><td>SUNKANALA</td><td>Babu</td><td>9686688356</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>UJANI</td><td>GUDAPALLI</td><td>Babu</td><td>9686688356</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>NAGAMARAPALLI</td><td>NAGAMARAPALLI</td><td>Anwar Jakati</td><td>8762506078</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>NAGAMARAPALLI</td><td>NANDYALA</td><td>Anwar Jakati</td><td>8762506078</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>NAGAMARAPALLI</td><td>JAKANALA</td><td>Anwar Jakati</td><td>8762506078</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>NAGAMARAPALLI</td><td>ITAGYALA</td><td>Anwar Jakati</td><td>8762506078</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>ENAGUNDA</td><td>ENAGUNDA</td><td>Chandrakanth</td><td>8970907009</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>CHIKLIJE</td><td>MEDAPALLI</td><td>Rajkumra Gaikwad</td><td>8495010922</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>CHIKLIJE</td><td>NAGUREM</td><td>Babu</td><td>9686688356</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>CHIKLIJE</td><td>CHIKLIJE</td><td>Narshimlu</td><td>9886344685</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>CHINTAKI</td><td>ENAGUNDA</td><td>BARADAPURA</td><td>Arunkumar Sonnagi</td><td>7899743858</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>SANTAPURA</td><td>SANTAPURA</td><td>Hameed Ali</td><td>9964541770</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>SANTAPURA</td><td>JIRGABI</td><td>Hameed Ali</td><td>9964541770</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>SANTAPURA</td><td>JEERGAKE</td><td>Hameed Ali</td><td>9964541770</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>JAMBAGI</td><td>JAMBAGI</td><td>Narshimlu</td><td>9886344685</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>JAMBAGI</td><td>MAHARAJAVADI</td><td>Narshimlu</td><td>9886344685</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>SHEMBELLI</td><td>SHEMBELLI</td><td>Hameed Ali</td><td>9964541770</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>SHEMBELLI</td><td>CHATANALA</td><td>Hameed Ali</td><td>9964541770</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>GADIKUSANURA</td><td>GADIKUSANURA</td><td>Sallavuddin</td><td>9902042125</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>GADIKUSANURA</td><td>PASHAPURA</td><td>Sallavuddin</td><td>9902042125</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>KOWTABI</td><td>BALURAJE</td><td>Sanagmesh Biradar</td><td>8431032778</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>KOWTABI</td><td>KOWTABI</td><td>Sanagmesh Biradar</td><td>8431032778</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>KOWTABI</td><td>KOWTAKE</td><td>Sanagmesh Biradar</td><td>8431032778</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>GADIKUSANURA</td><td>BELUREN</td><td>Sallavuddin</td><td>9902042125</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>SORALLI</td><td>VALLEPURA</td><td>Vimla</td><td>9731968084</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>SORALLI</td><td>ALURAKE</td><td>Vimla</td><td>9731968084</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>SORALLI</td><td>SORALLI</td><td>Vimla</td><td>9731968084</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>KOWDAGANVA</td><td>KOWDAGANVA</td><td>Siddlingamma</td><td>6362188064</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>KOWDAGANVA</td><td>ALURABI</td><td>Siddlingamma</td><td>6362188064</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>KOWDAGANVA</td><td>MUSTAPURA</td><td>Siddlingamma</td><td>6362188064</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>BORGIJE</td><td>BORGIJE</td><td>Nakusha</td><td>7353586201</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>KHANAPURA</td><td>KANDAGULA</td><td>Balika</td><td>9164644458</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>KHANAPURA</td><td>KHANAPURA</td><td>Balika</td><td>9164644458</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>VADAGANVAD</td><td>VADAGANVAD</td><td>Namdeva Metre</td><td>9449604994</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>BORGIJE</td><td>KHASEMPURA B</td><td>Nakusha</td><td>7353586201</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>BELAKONI CHOWDARI</td><td>RAKSHSHALA K</td><td>Pandit</td><td>9902394936</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>MASKALA</td><td>MASKALA</td><td>Shilpa</td><td>8971169220</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>MASKALA</td><td>NAGURA B</td><td>Shilpa</td><td>8971169220</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>BELAKONI CHOWDARI</td><td>BELAKONI CHOWDARI</td><td>Pandit</td><td>9902394936</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>BELAKONI CHOWDARI</td><td>RAKSHYALA B</td><td>Pandit</td><td>9902394936</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>DUPATAMAHAGANVA</td><td>DUPATAMAHAGANVA</td><td>Pandit</td><td>9902394936</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>DUPATAMAHAGANVA</td><td>MANIGEMPURA</td><td>Pandit</td><td>9902394936</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>LADHA</td><td>LADHA</td><td>Yuvraj Naik</td><td>6361036729</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>LADHA</td><td>BACHEPALLI</td><td>Yuvraj Naik</td><td>6361036729</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>LADHA</td><td>BABALI</td><td>Yuvraj Naik</td><td>6361036729</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>HEDAGAPURA</td><td>HEDAGAPURA</td><td>Namdeva Metre</td><td>9449604994</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>SANTAPURA</td><td>HEDAGAPURA</td><td>NITDORA K</td><td>Namdeva Metre</td><td>9449604994</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>BONTI</td><td>BONTI</td><td>Laxmi</td><td>8660400357</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>BANDARA KUMATA</td><td>HANGARAGABI</td><td>Laxmi</td><td>8660400357</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>HOKRANA</td><td>HOKRANA</td><td>Vikram Malke</td><td>9741284180</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>HOKRANA</td><td>KHERDABI</td><td>Vikram Malke</td><td>9741284180</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>KARAKYALA</td><td>KARAKYALA</td><td>Qamruddin</td><td>9448259440</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Aurad</td><td>OWRADABI</td><td>KARAKYALA</td><td>DONGARAGAVA</td><td>Qamruddin</td><td>9448259440</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>Mruthyunjaya</td><td>907174597</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>MUSTARI</td><td>MUSTARI</td><td>Ravindra</td><td>9844788510</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>KODAMBALA</td><td>GURUDALA</td><td>Mruthyunjaya</td><td>907174597</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>KODAMBALA</td><td>KODAMBALA</td><td>Mruthyunjay</td><td>907174597</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>BELAKERA</td><td>BELAKERA</td><td>Vithal</td><td>8197054606</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>VALAKHINDI</td><td>VALAKHINDI</td><td>Radhika</td><td>9113613348</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>VALAKHINDI</td><td>RAMAPURA</td><td>Radhika</td><td>9113613348</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>TALAMADAGI</td><td>TALAMADAGI</td><td>Ramesh walikar</td><td>8277076289</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>HIPPARGA</td><td>HIPPARGA</td><td>Ramesh walikar</td><td>8277076289</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>ITAGA</td><td>MUDANALA</td><td>Ramesh walikar</td><td>8277076289</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>ITAGA</td><td>ITAGA</td><td>Ramesh walikar</td><td>8277076289</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>SHAMATABADA</td><td>SHAMATABADA</td><td>Goutami</td><td>9008198039</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>SHAMATABADA</td><td>KANDAGOLA</td><td>Goutami</td><td>9008198039</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>VADDANAKERA</td><td>VADDANAKERA</td><td>Ramesh walikar</td><td>8277076289</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>MADAGOLA</td><td>MADAGOLA</td><td>Vithal</td><td>8197054606</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>CHITAGUPPA</td><td>BHASKARA NAGARA</td><td>Mruthyunjaya</td><td>907174597</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>NIRNA</td><td>NIRNA</td><td>NIRNA</td><td>Hanumanthraya</td><td>7353249481</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>NIRNA</td><td>MADARAGI</td><td>MADARAGI</td><td>Ravikumar</td><td>7259218751</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>NIRNA</td><td>MADARAGI</td><td>BHADRAPURA</td><td>Ravikumar</td><td>7259218751</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>NIRNA</td><td>DEVAGEERI</td><td>BASHEERAPURA</td><td>Sunil</td><td>7483596121</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>NIRNA</td><td>DEVAGEERI</td><td>DEVAGEERI</td><td>Sunil</td><td>7483596121</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>NIRNA</td><td>MUTTANGI</td><td>MUTTANGI</td><td>Ravikumar</td><td>7259218751</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>NIRNA</td><td>MUTTANGI</td><td>ALIPURA</td><td>Ravikumar</td><td>7259218751</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>NIRNA</td><td>UDABALA</td><td>UDABALA</td><td>Anilkumar</td><td>9448812023</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>NIRNA</td><td>BANNALLI</td><td>BANNALLI</td><td>Dhanraj</td><td>8088469595</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>NIRNA</td><td>MANGALAGI</td><td>MANGALAGI</td><td>Sunil</td><td>7483596121</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>NIRNA</td><td>NAGANAKERA</td><td>NAGANAKERA</td><td>K gouthami</td><td>9008198039</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>BEMALAKHEDA</td><td>BEMALAKHEDA</td><td>BEMALAKHEDA</td><td>Ningappa</td><td>8971052270</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>BEMALAKHEDA</td><td>UDAMANALLI</td><td>UDAMANALLI</td><td>Kerisidda</td><td>9449154401</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>BEMALAKHEDA</td><td>KARAPAPALLI</td><td>POLAKAPALLI</td><td>Ningappa</td><td>8971052270</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>BEMALAKHEDA</td><td>KARAPAPALLI</td><td>KARAPAPALLI</td><td>Kerisidda</td><td>9449154401</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>BEMALAKHEDA</td><td>KARAKANALLI</td><td>KARAKANALLI</td><td>Ramappa</td><td>9980733296</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>BEMALAKHEDA</td><td>KARAKANALLI</td><td>SAIDAPURA</td><td>Ramappa</td><td>9980733296</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>BEMALAKHEDA</td><td>MEENAKERA</td><td>MEENAKERA</td><td>Vittalrao</td><td>8550035757</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>BEMALAKHEDA</td><td>MANNAEKHELLI</td><td>BORALA</td><td>Vittalrao</td><td>8550035757</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>BEMALAKHEDA</td><td>MANNAEKHELLI</td><td>MANNAEKHELLI</td><td>Vittalrao</td><td>8550035757</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>CHITAGUPPA</td><td>BEMALAKHEDA</td><td>CHANGALERA</td><td>CHANGALERA</td><td>Ramappa</td><td>9980733296</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>HULASURA</td><td>HULASURA</td><td>Nagaraj Vandagnor</td><td>9900210814</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>HULASURA</td><td>SOLADABAKA</td><td>Nagaraj Vandagnor</td><td>9900210814</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>TOGALURA</td><td>TOGALURA</td><td>Kirankumari</td><td>8867677364</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>TOGALURA</td><td>KADARABADA</td><td>Kirankumari</td><td>8867677364</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>DEVANALA</td><td>DEVANALA</td><td>Ashwathnarayan</td><td>8971966717</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>TOGALURA</td><td>HALAHALLI</td><td>Kirankumari</td><td>8867677364</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>DEVANALA</td><td>MACHANALA</td><td>Ashwatnarayan</td><td>8971966717</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>GADIGOWNDAGANVA</td><td>GADIGOWNDAGANVA</td><td>Kashinath Kamshetti</td><td>9900954285</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>MIRKALA</td><td>MIRKALA</td><td>Arunkumar Bhalke</td><td>9620034351</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>KHANDALA</td><td>GUTTI</td><td>Sharada</td><td>7899194256</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>BELURA</td><td>BELURA</td><td>Shankar Aurade</td><td>7676882061</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>GORTABH</td><td>GORTABH</td><td>Ashwathnarayan</td><td>8971966717</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>MACHALAMBA</td><td>MACHALAMBA</td><td>Shankar Aurade</td><td>7676882061</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>GADIRAYAPALLI</td><td>GADIRAYAPALLI</td><td>Veeresh Itagi</td><td>6362429543</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>GADIRAYAPALLI</td><td>KADEPURA</td><td>Veeresh Itagi</td><td>6362429543</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>GADIRAYAPALLI</td><td>LIMBAPURA</td><td>Veeresh Itagi</td><td>6362429543</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>DHANNURA K</td><td>MUSTAPURA</td><td>Shankar Aurade</td><td>7676882061</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>HULASURA</td><td>HULASURA</td><td>MIRKALA</td><td>KOTAMALA</td><td>Arunkumar Bhalke</td><td>9620034351</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>KITTA</td><td>GOKULA</td><td>Dushyantreddy</td><td>9902314492</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>KITTA</td><td>KITTA</td><td>Dushyantreddy</td><td>9902314492</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>DHANNURA K</td><td>DHANNURA K</td><td>Dushyantreddy</td><td>9902314492</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>KHANDALA</td><td>KHANDALA</td><td>Balaji D R</td><td>8867578012</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>NEELAKANTA</td><td>KHANAPURA K</td><td>Jayalaxmi</td><td>8095349303</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>NEELAKANTA</td><td>NEELAKANTA</td><td>Jayalaxmi</td><td>8095349303</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>HALLI</td><td>LAHESHVARA</td><td>Dushyantreddy</td><td>9902314492</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>NARAYANAPURA</td><td>NARAYANAPURA</td><td>Mallikarjun Biradar</td><td>8885815138</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>BETABALAKUNDA</td><td>BETABALAKUNDA</td><td>Vijaylaxmi Biradar</td><td>8951803411</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>MANTALA</td><td>MANTALA</td><td>Dilip</td><td>9731495657</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>ILYALA</td><td>ILYALA</td><td>Sunil Malipatil</td><td>8748884363</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>GUNDURA</td><td>GUNDURA</td><td>Sangappa Kalyani</td><td>7829262133</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>ALAGUDA</td><td>ALAGUDA</td><td>Kenchappa Dani</td><td>6362242427</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>ALAGUDA</td><td>VATTARAGA</td><td>Kenchappa Dani</td><td>6362242427</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>HIPPARAGA GHATA</td><td>HIPPARAGA GHATA</td><td>Ashok Devaramani</td><td>9886978343</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>MANNALLI</td><td>HONNALLI</td><td>Sunil Malipatil</td><td>8748884363</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>CHITTA KALLADEVA</td><td>CHITTA KALLADEVA</td><td>Subhash Mayur</td><td>9663150473</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>MANTALA</td><td>URKI</td><td>Ashok Devaramani</td><td>9886978343</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>MANNALLI</td><td>MANNALLI</td><td>Sandeep Teli</td><td>7892460813</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>MANTALA</td><td>KAMALELUDI</td><td>Dilip</td><td>9731495657</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>SASTAPURA</td><td>ATALAPURA</td><td>Sudhakar Gourshetty</td><td>8722474746</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>SASTAPURA</td><td>SASTAPURA</td><td>Sudhakar Gourshetty</td><td>8722474746</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>CHITTA KALLADEVA</td><td>HANDRIYALA RU</td><td>Subhash Mayur</td><td>9663150473</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>JAJANAMUGALI</td><td>JAJANAMUGALI</td><td>Bilal</td><td>9686399900</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>GHOTALA</td><td>GHOTALA</td><td>Bilal</td><td>9686399900</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>CHANDAKAPURA</td><td>RAMATIRTHAKH</td><td>Kaveri Patil</td><td>8095476477</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>HALLI</td><td>UMAPURA</td><td>Sunil Malipatil</td><td>8748884368</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>HALLI</td><td>HALLI</td><td>Sunil Malipatil</td><td>8748884368</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>CHANDAKAPURA</td><td>CHANDAKAPURA</td><td>Kaveri Patil</td><td>8095476477</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MANTALA</td><td>ILYALA</td><td>MIRJAPURA</td><td>Sudhakar Gourshetty</td><td>8722474746</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>RAJESHVARA</td><td>RAJESHVARA</td><td>Praveen Bhunna</td><td>9620460725</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>RAJOLA</td><td>RAJOLA</td><td>Sayappa Katri</td><td>7829262133</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>ISLAMPURA</td><td>ISLAMPURA</td><td>Shivaraj Devarnavadgi</td><td>9972450443</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>ISLAMPURA</td><td>HANDRALAKE</td><td>Rajenedra GH</td><td>9972774157</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>KINNI</td><td>LINGADALLI</td><td>Shivaraj Devarnavadgi</td><td>9972450443</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>NEERAGUDI</td><td>NEERAGUDI</td><td>Irappa Dhulare</td><td>9880209366</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>NEERAGUDI</td><td>KOWDIYALA S</td><td>Irappa Dhulare</td><td>9880209366</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>ROLA</td><td>ROLA</td><td>Rajenedra GH</td><td>9972774157</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>ROLA</td><td>KOWDIYALARU</td><td>Rajenedra GH</td><td>9972774157</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>KHERDABH</td><td>KHERDABH</td><td>Ramesh Chavan</td><td>8088282020</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>YARABAGA</td><td>SADALAPURA</td><td>Shivaraj Devarnavadgi</td><td>9972450443</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>DHANNURARU</td><td>DHANNURARU</td><td>Sayappa Katri</td><td>7829262133</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>DHANNURARU</td><td>PANDARAGERA</td><td>Sayappa Katri</td><td>7829262133</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>YARANDI</td><td>YARANDI</td><td>Pyaranbee</td><td>7090897534</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>ISLAMPURA</td><td>MANGALURA</td><td>Shivaraj Devarnavadgi</td><td>9972450443</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>YARABAGA</td><td>YARABAGA</td><td>Shivaraj Devarnavadgi</td><td>9972450443</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>TADOLA</td><td>TADOLA</td><td>Sudhir wadekar</td><td>9008827199</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>RAJESHVARA</td><td>TADOLA</td><td>GHOGGA</td><td>Sudhir wadekar</td><td>9008827199</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>MUDABI</td><td>MUDABI</td><td>Nagaraj Poojari</td><td>9591991740</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>HIPPARAGA GHATA</td><td>KHANAPURA BH</td><td>Santosh kattimani</td><td>9972275494</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>BAGADHURI</td><td>BAGADHURI</td><td>Ashok Telkar</td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>BAGADHURI</td><td>HATYALA</td><td>Ashok Telkar</td><td></td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>HARAKUDA</td><td>HARAKUDA</td><td>Basavaraj Chavan</td><td>9535800818</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>HARAKUDA</td><td>SARAJAVALAGA</td><td>Basavaraj Chavan</td><td>9535800818</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>JANAVADA</td><td>JANAVADA</td><td>Sunil Chengati</td><td>8970727164</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>MAISALAGA</td><td>HIPPARAGA BH</td><td>Sunil Chengati</td><td>8970727164</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>MAISALAGA</td><td>MAISALAGA</td><td>Sunil Chengati</td><td>8970727164</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>KALAKHORA</td><td>KALAKHORA</td><td>Santosh kattimani</td><td>9972275494</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>HIRANAGANVA</td><td>HIRANAGANVA</td><td>Nagaraj Poojari</td><td>9591991740</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>ROLA</td><td>SUNGATANA</td><td>Manavar Prabhu</td><td>9113011217</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>EKALURA</td><td>EKALURA</td><td>Sunil Chengati</td><td>8970727164</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>GADALEGANVA BH</td><td>GADALEGANVA BH</td><td>Sangappa Kalyani</td><td>8971522769</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>JANAVADA</td><td>YALAVANTI</td><td>Sunil Chengati</td><td>8970727164</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>GADALEGANVA BH</td><td>KHERDA KH</td><td>Sangappa Kalyani</td><td>8971522769</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>CHIKANAGANVA</td><td>CHIKANAGANVA</td><td>Santosh kattimani</td><td>9972275494</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>HARAKUDA</td><td>SIRAGAPURA</td><td>Basavaraj Chavan</td><td>9535800818</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>KINNI</td><td>KINNI</td><td>Manavar Prabhu</td><td>9113011217</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>YADALAGUNDI</td><td>YADALAGUNDI</td><td>Nagaraj Poojari</td><td>9591991740</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>YADALAGUNDI</td><td>SAIDAPURA</td><td>Nagaraj Poojari</td><td>9591991740</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>MUDABI</td><td>EKALURA</td><td>HAMUNAGARA</td><td>Sunil Chengati</td><td>8970727164</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>KOHINURA</td><td>KOHINURA</td><td>Prabhavati Jamadar</td><td>7760483605</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>LADAVANTI</td><td>LADAVANTI</td><td>Vijayakumar B</td><td>9632843969</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>EKKAMBA</td><td>EKKAMBA</td><td>Tulsabai Jamadar</td><td>8722621606</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>EKKAMBA</td><td>DHAMURI</td><td>Tulsabai Jamadar</td><td>8722621606</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>UJALAMBA</td><td>UJALAMBA</td><td>Manav Prabhu</td><td>9900203211</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>CHITTAKOTA B</td><td>CHITTAKOTA B</td><td>Indirabai</td><td>9901919520</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>CHITTAKOTA</td><td>BHAKANALA</td><td>Indirabai</td><td>9901919520</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>BETAGERA</td><td>BETAGERA</td><td>Somashankar Mulge</td><td>9019087001</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>RAMATIRTHAD</td><td>GADALEGANVA</td><td>Somashankar Mulge</td><td>9019087001</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>SIRAGURA</td><td>SIRAGURA</td><td>Somashankar Mulge</td><td>9019087001</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>RAMATIRTHAD</td><td>RAMATIRTHAD</td><td>Somashankar Mulge</td><td>9019087001</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>HATTARAGA S</td><td>GILIGILI</td><td>Sunita</td><td>9731560864</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>HATTARAGA S</td><td>HATTARAGA S</td><td>Sunita</td><td>9731560864</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>RAMATIRTHAD</td><td>CHITTAKOTA K</td><td>Sunita</td><td>9731560864</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>BHOSAGA</td><td>BHOSAGA</td><td>Somashankar Mulge</td><td>9019087001</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>BHOSAGA</td><td>MANAKHEDA</td><td>Somashankar Mulge</td><td>9019087001</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>KOHINURA</td><td>ATTURA</td><td>Prabhavati Jamadar</td><td>7760483605</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>KOHINURA</td><td>CHITTAKOTA</td><td>SIRURI</td><td>Indirabai</td><td>9901919520</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>BASAVAKALYANA</td><td>BASAVAKALYANA</td><td>Rajashekhar</td><td>9686606269</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>NARAYANAPURA</td><td>YADALAPURA</td><td>Mallikarjun Biradar</td><td>8885815138</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>NARAYANAPURA</td><td>SHIVAPURA</td><td>Mallikarjun Biradar</td><td>8885815138</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>BASAVAKALYANA</td><td>TRIPURANKA</td><td>Rajashekhar</td><td>9686606269</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>PRATAPURA</td><td>TALABOGA</td><td>Anuradha</td><td>9740952610</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>PRATAPURA</td><td>PRATAPURA</td><td>Anuradha</td><td>9740952610</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>MORAKHANDI</td><td>MORAKHANDI</td><td>Dushyantreddy</td><td>9902314492</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>GOWRA</td><td>GOWRA</td><td>Veerendra Malkery</td><td>9448413321</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>basavakalyan</td><td>BASAVAKALYANA</td><td>BETABALAKUNDA</td><td>JANAPURA</td><td>Vijayalaxmi Biradar</td><td>8951803411</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>BHALKI</td><td>BHALKI</td><td>PARASAPPA</td><td>9901502929</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>MADAKATTI</td><td>BAJULAGA</td><td>ARCHANA</td><td>9110624907</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>MADAKATTI</td><td>KORURA</td><td>ARCHANA</td><td>9110624907</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>KARADIYALA</td><td>KARADIYALA</td><td>BASAWRAJ SAWANTH</td><td>9916797071</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>KARADIYALA</td><td>KADALABADA</td><td>BASAWRAJ SAWANTH</td><td>9916797071</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>MADAKATTI</td><td>GUBYALA</td><td>ARCHANA</td><td>9110624907</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>KARADIYALA</td><td>DHARAJAVADI</td><td>BASAWRAJ SAWANTH</td><td>9916797071</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>TALAVADA KH</td><td>TALAVADA KH</td><td>ASHALATHA</td><td>9611566353</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>TALAVADA KH</td><td>SAIDAPURAVADI</td><td>ASHALATHA</td><td>9611566353</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>JOLADABAKA</td><td>JOLADABAKA</td><td>HASAN ALI</td><td>7892424448</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>SIDDESHVARA</td><td>SIDDESHVARA</td><td>VINOD</td><td>9986057622</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>MARURA</td><td>MARURA</td><td>BASAWRAJ SAWANTH</td><td>9916797071</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>MARURA</td><td>CHIKALACHANDA</td><td>BASAWRAJ SAWANTH</td><td>9916797071</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>KUNTESHIRSHI</td><td>KUNTESHIRSHI</td><td>TIRUPATI</td><td>7975476956</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>MADAKATTI</td><td>MADAKATTI</td><td>ARCHANA</td><td>9110624907</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>KUNTESHIRSHI</td><td>KALAVADI</td><td>TIRUPATI</td><td>7975476956</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>KUNTESHIRSHI</td><td>HARANALA</td><td>TIRUPATI</td><td>7975476956</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>DADAGI</td><td>DADAGI</td><td>CHENNAMMA</td><td>7892583784</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>DADAGI</td><td>RAMATIRTHAVADI</td><td>CHENNAMMA</td><td>7892583784</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>DADAGI</td><td>EKALASAPURAVADI</td><td>CHENNAMMA</td><td>7892583784</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>GORACHINCHOLI</td><td>GORACHINCHOLI</td><td>TIRUPATI</td><td>7975476956</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>NIDEBAN</td><td>NIDEBAN</td><td>PARASAPPA</td><td>9901502929</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>NIDEBAN</td><td>ANANDAVADI</td><td>PARASAPPA</td><td>9901502929</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>NIDEBAN</td><td>KOTAGERA</td><td>PARASAPPA</td><td>9901502929</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>KOTGYALWADI</td><td>KOTAGYALAVADI</td><td>DEVAPPA</td><td>8310855054</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>BHALKI</td><td>GHANESHPURUWADAI</td><td>GANESHAPURAVADI</td><td>BASAWRAJ SAWANTH</td><td>9916797071</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>SAYAGANVA</td><td>SAYAGANVA</td><td>RAJKUMAR</td><td>9731033823</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>KHUDAVANDAPURA</td><td>KHUDAVANDAPURA</td><td>SHABENA BANU</td><td>9148364216</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>KHUDAVANDAPURA</td><td>INCHURA</td><td>SHABENA BANU</td><td>9148364216</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>KESARA JAVALAGA</td><td>KESARA JAVALAGA</td><td>HASAN</td><td>9036533304</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>ATTARAGA</td><td>SHREEMALI</td><td>VERANNA</td><td>9945743331</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>JAMAKHANDI</td><td>JAMAKHANDI</td><td>YALLAPPA</td><td>8217301203</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>JAMAKHANDI</td><td>VANJARAKHEDA</td><td>YALLAPPA</td><td>8217301203</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>JAMAKHANDI</td><td>KONGALI</td><td>YALLAPPA</td><td>8217301203</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>RU GOWNDAGANVA</td><td>RU GOWNDAGANVA</td><td>VINOD</td><td>9986057622</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>RU GOWNDAGANVA</td><td>KUNTEGANVA</td><td>VINOD</td><td>9986057622</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>LADA</td><td>LADA</td><td>AVINASH</td><td>7353204388</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>HALASI L</td><td>HALASI L</td><td>UMESH</td><td>7090997700</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>HALASI L</td><td>JEERAGYALA</td><td>UMESH</td><td>7090997700</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>HALASI L</td><td>VAGALAGANVA</td><td>UMESH</td><td>7090997700</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>ATTARAGA</td><td>GUNJARAGA</td><td>VERANNA</td><td>9945743331</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>ATTARAGA</td><td>ATTARAGA</td><td>VERANNA</td><td>9945743331</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>ALAVAYI</td><td>ALAVAYI</td><td>MANJUNATH</td><td>7996942790</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>BOLEGANVA</td><td>NARADASANGAMA</td><td>MANJUNATH</td><td>7996942790</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>MEHAKARA</td><td>MEHAKARA</td><td>RAFIK</td><td>9742726091</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>ATTARAGA</td><td>MANIKESHVARA</td><td>VERANNA</td><td>9945743331</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>TUGANVA H</td><td>TUGANVA H</td><td>MULLASAB</td><td>6361435181</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>BOLEGANVA</td><td>BOLEGANVA</td><td>MANJUNATH</td><td>7996942790</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>SAYAGANVA</td><td>ALAVAYI</td><td>ELAMAVADI</td><td>MANJUNATH</td><td>7996942790</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>NITTURA BH</td><td>NITTURA BH</td><td>AVINASH</td><td>7353204388</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>AMBESANGAVI</td><td>AMBESANGAVI</td><td>SANJAY JANKAR</td><td>9972680062</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>HAJANALA</td><td>HAJANALA</td><td>SANJAY JANKAR</td><td>9972680062</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>HAJANALA</td><td>GORANALA</td><td>AMBRISH</td><td>8861358389</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>BEERIKH</td><td>BEERIKH</td><td>ABHISHEK</td><td>9663402248</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>BEERIKH</td><td>NAGARALA</td><td>ABHISHEK</td><td>9663402248</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>BEERIKH</td><td>MURALA</td><td>ABHISHEK</td><td>9663402248</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>BEERIKH</td><td>KUDLI</td><td>ABHISHEK</td><td>9663402248</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>HUPALA</td><td>HUPALA</td><td>ASMA BEGUM</td><td>7619698952</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>HUPALA</td><td>KERURA</td><td>ASMA BEGUM</td><td>7619698952</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>HUPALA</td><td>AHMADABADA</td><td>ASMA BEGUM</td><td>7619698952</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>BALURA</td><td>JAINAPURA</td><td>AMBRISH</td><td>8861358389</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>BALURA</td><td>BALURA</td><td>AMBRISH</td><td>8861358389</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>HAJANALA</td><td>KOTAGYALA</td><td>SANJAY JANKAR</td><td>9972680062</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>CHANDAPURA</td><td>CHANDAPURA</td><td>MARUTI</td><td>8618507983</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>CHANDAPURA</td><td>KHASHAMAPURA</td><td>MARUTI</td><td>8618507983</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>CHANDAPURA</td><td>DONGARAGI</td><td>MARUTI</td><td>8618507983</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>WALSANGH</td><td>VALASANGA</td><td>SANJAY JANKAR</td><td>9972680062</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>NITTURABH</td><td>SAIDDAPURUWADAI</td><td>SIDDAPURA VADI</td><td>ABHISHEK</td><td>9663402248</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>KHATAKA CHINCHOLI</td><td>KHATAKA CHINCHOLI</td><td>BHUMANNA</td><td>8971534209</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>UCHYA</td><td>UCHYA</td><td>JYOTI</td><td>8105939097</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>UCHYA</td><td>BYALAHALLI W</td><td>JYOTI</td><td>8105939097</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>VARAVATTI</td><td>VARAVATTI</td><td>KRISHNAJI</td><td>9019534201</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>DAVARAGANVA</td><td>DAVARAGANVA</td><td>SANTOSH</td><td>9972353154</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>TUGANVACH</td><td>TUGANVACH</td><td>KAAVERI</td><td>7019957897</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>TUGANVACH</td><td>NELVADA</td><td>KAAVERI</td><td>7019957898</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>MORAMBI</td><td>MORAMBI</td><td>SANTOSH</td><td>9972353154</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>HONNALLI</td><td>HONNALLI</td><td>SANTOSH</td><td>9972353154</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>MORAMBI</td><td>HALAGORTA</td><td>SANTOSH</td><td>9972353154</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>CHALAKAPURA</td><td>CHALAKAPURA</td><td>PUNDALIK</td><td>8497863641</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>NAVADAGI</td><td>NAVADAGI</td><td>SOMANING</td><td>9741363983</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>NAVADAGI</td><td>KAPALAPURA</td><td>SOMANING</td><td>9741363983</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>NAVADAGI</td><td>MAVINAHALLI</td><td>SOMANING</td><td>9741363983</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>ENAKURA</td><td>ENAKURA</td><td>SHIVARAJ</td><td>8495062695</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>ENAKURA</td><td>BARADAPURA</td><td>SHIVARAJ</td><td>8495062695</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>KURABA KHELAGI</td><td>KURABA KHELAGI</td><td>SOMANING</td><td>9741363983</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>MASHIMADU</td><td>MASHIMADU</td><td>JYOTI</td><td>8105939097</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>MASHIMADU</td><td>CHITTA</td><td>JYOTI</td><td>8105939097</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>KHATAKA CHINCHULI</td><td>MASHIMADU</td><td>SIKINDRABADA VADI</td><td>JYOTI</td><td>8105939097</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>LAKHANAGANVA</td><td>LAKHANAGANVA</td><td>DEVAPPA</td><td>8310855054</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>ALANDAI</td><td>ALANDI</td><td>DEVAPPA</td><td>8310855054</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>KHALSADAL</td><td>KALASADALA</td><td>DEVAPPA</td><td>8310855054</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>BEERIBH</td><td>HACHCHIKAMATA</td><td>MAHESH</td><td>8722460281</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>DONAGAPURA</td><td>DONAGAPURA</td><td>MAHESH</td><td>8722460281</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>METIMELAKUNDA</td><td>KAKANALA</td><td>SANDESH</td><td>9880190223</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>METIMELAKUNDA</td><td>METIMELAKUNDA</td><td>SANDESH</td><td>9880190223</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>BHATAMBRA</td><td>BHATAMBRA</td><td>SHIVKUMAR PATIL</td><td>9886594831</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>BEERIBH</td><td>BEERIBH</td><td>MAHESH</td><td>8722460281</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>BEERIBH</td><td>HUNAJIA</td><td>MAHESH</td><td>8722460282</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>METIMELAKUNDA</td><td>LANJAVADA</td><td>SANDESH</td><td>9880190223</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>SHIVANI</td><td>BHATASANGAVI</td><td>OMKAR</td><td>9980504439</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>SHIVANI</td><td>SHIVANI</td><td>OMKAR</td><td>9980504439</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>TALAVADAM</td><td>TALAVADAM</td><td>KRISHNAJI</td><td>9019534201</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>TALAVADAM</td><td>TELAGANVA</td><td>KRISHNAJI</td><td>9019534201</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>TALAVADAM</td><td>SOMAPURA</td><td>KRISHNAJI</td><td>9019534201</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>TALAVADAM</td><td>ATANURA</td><td>KRISHNAJI</td><td>9019534201</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>KALASARATUGANVA</td><td>KALASARATUGANVA</td><td>SANDESH</td><td>9880190223</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>SHEMSHERUPURUWADAI</td><td>JAYAGANVA</td><td>RAMAKANTH</td><td>6360092674</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>SHIVANI</td><td>TAMAGYALA</td><td>OMKAR</td><td>9980504439</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>SHEMSHERUPURUWADAI</td><td>SHAMASHERAPURA</td><td>RAMAKANTH</td><td>6360092674</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>METIMELAKUNDA</td><td>METIMELAKUNDA VADI</td><td>SANDESH</td><td>9880190223</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>LAKHANAGANVA</td><td>KALASARATUGANVA</td><td>KASARATUGANVA VADI</td><td>SANDESH</td><td>9880190223</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>HALABARGA</td><td>HALABARGA</td><td>NAJIM</td><td>8197295208</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>KANAJI</td><td>KANAJI</td><td>Md Hassin</td><td>9036533304</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>HALABARGA</td><td>TEGAMPURA</td><td>NAJIM</td><td>8197295208</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>HALABARGA</td><td>HALAHIPPARAGA</td><td>NAJIM</td><td>8197295209</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>KOSAMA</td><td>KOSAMA</td><td>KALLESH</td><td>9353264181</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>KOSAMA</td><td>NAGURAKE</td><td>KALLESH</td><td>9353264181</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>KOSAMA</td><td>ALIYABADA</td><td>KALLESH</td><td>9353264181</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>HUNAJEE K</td><td>TARANALLI</td><td>SANJUKUMAR TONNE</td><td>9480059102</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>HUNAJEE K</td><td>HUNAJEE K</td><td>SANJUKUMAR TONNE</td><td>9480059102</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>HUNAJEE K</td><td>GODIHIPPARGA</td><td>SANJUKUMAR TONNE</td><td>9480059102</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>DHANNURAH</td><td>DHANNURAH</td><td>NAJIM</td><td>8197295208</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>KONAMELAKUNDA</td><td>KONAMELAKUNDA</td><td>UMESH PANCHAL</td><td>9448000739</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>RUDANURA</td><td>KHANAPURA</td><td>SANTOSH RANDALE</td><td>6364630234</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>RUDANURA</td><td>RUDANURA</td><td>SANTOSH RANDALE</td><td>6364630234</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>RUDANURA</td><td>MALACHAPURA</td><td>SANTOSH RANDALE</td><td>6364630234</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>JANTI</td><td>JANTI</td><td>NAJIM</td><td>8197295208</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>JANTI</td><td>NELAGI</td><td>NAJIM</td><td>8197295208</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>BYALAHALLIKH</td><td>BYALAHALLIKH</td><td>ADERAO</td><td>9766930667</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>BYALAHALLIKH</td><td>KAMALAPURA</td><td>ADERAO</td><td>9766930668</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>HALAHALLI K</td><td>NIRAMANAHALLI</td><td>NANDINI</td><td>7022747267</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>DHANNURAH</td><td>SEVANAGARA</td><td>NAJIM</td><td>8197295208</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bhalki</td><td>HALABARGA</td><td>HALAHALLI K</td><td>HALAHALLI K</td><td>NANDINI</td><td>7022747267</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>CHILLARGI</td><td>CHILLARGI</td><td>Jeevan</td><td>9591978570</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>CHIMAKODA</td><td>CHIMAKODA</td><td>Sushmita</td><td>8296401384</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>CHIMAKODA</td><td>KHAJAPURA</td><td>Sushmita</td><td>8296401384</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>CHIMAKODA</td><td>BASANTAPURA</td><td>Sushmita</td><td>8296401384</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>KANGATI</td><td>KANGATI</td><td>Ahmed Pasha</td><td>9844319765</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>KANGATI</td><td>FATTEPURACH</td><td>Ahmed Pasha</td><td>9844319765</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>KAPALAPURAJH</td><td>KAPALAPURAJH</td><td>Sangeeta</td><td>8147198428</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>KAPALAPURAJH</td><td>JAMPADA</td><td>Sangeeta</td><td>8147198428</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>KAPALAPURAJH</td><td>AMADALAPADA</td><td>Sangeeta</td><td>8147198428</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>ALAMASAPURA</td><td>ALAMASAPURA</td><td>Sangeeta</td><td>8147198428</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>KAPALAPURAJH</td><td>RASULABADA</td><td>Sangeeta</td><td>8147198428</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>MALEGANVA</td><td>MALEGANVA</td><td>Prabhuling</td><td>9242276176</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>MALEGANVA</td><td>NANDAGANVA</td><td>Prabhuling</td><td>9242276176</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>MALEGANVA</td><td>MIRAJAPURAKH</td><td>Prabhuling</td><td>9242276176</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>GADAGI</td><td>GADAGI</td><td>Chandrakant Bande</td><td>8073970928</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>HAMILAPURA</td><td>HAMILAPURA</td><td>Mahantesh</td><td>9945115834</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>HAMILAPURA</td><td>CHIKKAPETA</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>HAMILAPURA</td><td>NAVADAGERI</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>HAMILAPURA</td><td>GUMMA</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>SHAMARAJAPURA</td><td>SHAMARAJAPURA</td><td>Swaroop</td><td>9663070771</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>SHAMARAJAPURA</td><td>SOLAPURA</td><td>Swaroop</td><td>9663070771</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>SHAMARAJAPURA</td><td>SIPPALAGERA</td><td>Swaroop</td><td>9663070771</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>SHAMARAJAPURA</td><td>MAMANAKERI</td><td>Swaroop</td><td>9663070771</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>SHAMARAJAPURA</td><td>KABEERAVADA</td><td>Swaroop</td><td>9663070771</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>TAJALAPURA</td><td>TAJALAPURA</td><td>Ravi</td><td>9980984333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>TAJALAPURA</td><td>ODAVADA</td><td>Ravi</td><td>9980984333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>ALIYABADA</td><td>ALIYABADA</td><td>Muttamma</td><td>7411933116</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>IMAMABADA</td><td>IMAMABADA</td><td>Premkumar</td><td>9901162315</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>KANGATI</td><td>FATTEPURAJH</td><td>Ahmed Pasha</td><td>9844319765</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>KHILLARKA</td><td>SHERIHUSENI</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>HAMILAPURA</td><td>BAVAPURA</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>HAMILAPURA</td><td>DATTANAKERI</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>HAMILAPURA</td><td>ALANKERI</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>KHILLARKA</td><td>KHILLARKA</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>SULTANAPURAKH</td><td>SULTANAPURAKH</td><td>Ravi</td><td>9980984333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARA UTTARA</td><td>ALIYABADA</td><td>BAGE KARANJA</td><td>Muttamma</td><td>7411933116</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>ASHTURA</td><td>ASHTURA</td><td>Chandrakant</td><td>9686654795</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>MIRAJAPURAT</td><td>MIRAJAPURAT</td><td>Chandrakant</td><td>9686654795</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>MALKAPURA</td><td>MALKAPURA</td><td>Ravi</td><td>9980984333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>MALKAPURA</td><td>SULTANAPURAJH</td><td>Ravi</td><td>9980984333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>HALADAKERI KH</td><td>HALADAKERI KH</td><td>Ravi</td><td>9980984333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>MAILURA</td><td>MAILURA</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>MAILURA</td><td>KUMBARAVADA</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>AMALAPURA</td><td>AMALAPURA</td><td>Laxmi</td><td>8618857108</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>AMALAPURA</td><td>GORANALLI BH</td><td>Laxmi</td><td>8618857108</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>CHITTA</td><td>CHITTA</td><td>Ravi</td><td>9980984333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>GUNNALLI</td><td>GUNNALLI</td><td>Ravi</td><td>9980984333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>GUNNALLI</td><td>SHAHAPURA</td><td>Ravi</td><td>9980984333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>HALADAKERI KH</td><td>HALADAKERI JH</td><td>Ravi</td><td>9980984333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>GULLARAHAVEELI</td><td>BRAHMAPURA</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>GULLARAHAVEELI</td><td>BAGEHAMAMA</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>GULLARAHAVEELI</td><td>SHERICHAMPA</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>GULLARAHAVEELI</td><td>GULLARAHAVEELI</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>GULLARAHAVEELI</td><td>JANGALAKOYI</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>HALADAKERI KH</td><td>BAGEIBRAHIMA</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>HALADAKERI KH</td><td>MAILATEGAIRABI</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>HALADAKERI KH</td><td>BAGE-KHARIDI</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>HALADAKERI KH</td><td>MAILATEGORANALLI</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>HALADAKERI KH</td><td>BAGE-SHAHI</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BEEDARADAKSHINA</td><td>HALADAKERI KH</td><td>BAGEGORANALLI</td><td>Jagdeesh</td><td>9611136052</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>MANNALLI</td><td>MANNALLI</td><td>Rajkumar</td><td>9886181517</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>HOKRANABH</td><td>HOKRANABH</td><td>Babruvahan</td><td>8095691777</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>HOKRANABH</td><td>HOKRANAKH</td><td>Babruvahan</td><td>8095691777</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>NAGORA</td><td>NAGORA</td><td>Arunkumar</td><td>9972146505</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>NAGORA</td><td>GHODEPALLI</td><td>Arunkumar</td><td>9972146505</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>BUDHERA</td><td>BUDHERA</td><td>Sumangala</td><td>9449063184</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>BUDHERA</td><td>T MIRJAPURA</td><td>Sumangala</td><td>9449063184</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>CHINTALAGERA</td><td>CHINTALAGERA</td><td>Tippesh</td><td>7353890182</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>CHINTALAGERA</td><td>DHARMAPURA</td><td>Tippesh</td><td>7353890182</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>CHINTALAGERA</td><td>GOWSAPURA</td><td>Tippesh</td><td>7353890182</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>YAKATAPURA</td><td>YAKATAPURA</td><td>Auub Khan</td><td>8660383710</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>YAKATAPURA</td><td>SATOLI</td><td>Auub Khan</td><td>8660383710</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>BARURA</td><td>BARURA</td><td>Arunkumar</td><td>9972146505</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>RAJAGIRA</td><td>RAJAGIRA</td><td>Arunkumar</td><td>9972146505</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>SINDHOLA</td><td>SINDHOLA</td><td>Manjunath</td><td>9480742735</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>REKULAGI</td><td>REKULAGI</td><td>Anil</td><td>9008954819</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>TADAPALLI</td><td>TADAPALLI</td><td>Tayyab</td><td>9845090610</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>BAMBALAGI</td><td>BAMBALAGI</td><td>Tayyab</td><td>9845090610</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>MARAKUNDA</td><td>MARAKUNDA</td><td>Shivkumar</td><td>7996653813</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>MARAKUNDA</td><td>BHANGURA</td><td>Shivkumar</td><td>7996653813</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>MARAKUNDA</td><td>MUGADALA</td><td>Shivkumar</td><td>7996653813</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>MANNALLI</td><td>MARAKUNDA</td><td>BAPURA</td><td>Shivkumar</td><td>7996653813</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>BAGADALA</td><td>BAGADALA</td><td>Laxman</td><td>9880973493</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>OWRADES</td><td>OWRADES</td><td>Afsar</td><td>9986566004</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>SIRASI A</td><td>SIRASI A</td><td>Mahanand</td><td>7760206945</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>HONNADDI</td><td>HONNADDI</td><td>Mahantesh</td><td>9945115834</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>HONNADDI</td><td>SHEKHAPURA</td><td>Mahantesh</td><td>9945115834</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>PATARAPALLI</td><td>PATARAPALLI</td><td>Farook</td><td>9480193014</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>BHAIRANALLI CH</td><td>BHAIRANALLI CH</td><td>Farook</td><td>9480193014</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>BHAIRANALLI CH</td><td>KHASHEMPURACH</td><td>Farook</td><td>9480193014</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>BAVAGI</td><td>BAVAGI</td><td>Mahanand</td><td>7760206945</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>BAVAGI</td><td>NELAVADA</td><td>Mahanand</td><td>7760206945</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>KHASHEMPURAP</td><td>KHASHEMPURAP</td><td>Nagveni</td><td>9916800662</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>KHASHEMPURAP</td><td>MALIKA MEERJAPURA</td><td>Nagveni</td><td>9916800662</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>MANDAKANALLI</td><td>MANDAKANALLI</td><td>Mallikarjun</td><td>9945296617</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>MANDAKANALLI</td><td>KANGANAKOTA</td><td>Mallikarjun</td><td>9945296617</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>KADAVADA</td><td>KADAVADA</td><td>Jyothi</td><td>9731182111</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>KADAVADA</td><td>SHEMASHANAGARA</td><td>Jyothi</td><td>9731182111</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>CHATNALLI</td><td>CHATNALLI</td><td>Chandrakant</td><td>9686654795</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>CHATNALLI</td><td>BARIDABADA</td><td>Chandrakant</td><td>9686654795</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>SANGOLAGI</td><td>SANGOLAGI</td><td>Shilpa</td><td>9620326810</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>RANJOLA KHENI</td><td>RANJOLA KHENI</td><td>Baswaraj</td><td>7353184844</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>NIDAVANCHA</td><td>NIDAVANCHA</td><td>Gurulatha</td><td>8105445914</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>SIRAKATANALLI</td><td>SIRAKATANALLI</td><td>Anil</td><td>9008954819</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>SIRAKATANALLI</td><td>HOCHAKANALLI</td><td>Anil</td><td>9008954819</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>BAGADALA</td><td>SANGOLAGI</td><td>HAJJARAGI</td><td>Anil</td><td>9008954819</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>KAMATANA</td><td>KAMATANA</td><td>Sattar</td><td>8310102459</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>SIKINDRAPURA</td><td>SIKINDRAPURA</td><td>Ashok</td><td>7353969686</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>SIKINDRAPURA</td><td>KHADARANAGARA</td><td>Ashok</td><td>7353969686</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>BAKACHOWDI</td><td>BAKACHOWDI</td><td>Gurunath</td><td>87262642929</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>BAKACHOWDI</td><td>NIJAMAPURA</td><td>Gurunath</td><td>87262642929</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>BELLURA</td><td>BELLURA</td><td>Mallikarjun Patil</td><td>9902340002</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>BELLURA</td><td>JAMISTANAPURA</td><td>Mallikarjun Patil</td><td>9902340002</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>YADLAPURA</td><td>YADLAPURA</td><td>Mahanand</td><td>7760206945</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>YADLAPURA</td><td>KUTTABADA</td><td>Mahanand</td><td>7760206945</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>YADLAPURA</td><td>AYASAPURA</td><td>Mahanand</td><td>7760206945</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>NOWBADA</td><td>NOWBADA</td><td>Mallikarjun Patil</td><td>9902340002</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>NOWBADA</td><td>CHONDI</td><td>Mallikarjun Patil</td><td>9902340002</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>NOWBADA</td><td>CHOWLI</td><td>Mallikarjun Patil</td><td>9902340002</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>KOLARAKE</td><td>KOLARAKE</td><td>Renuka</td><td>9008848263</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>CHIDRI</td><td>CHIDRI</td><td>Sattar</td><td>8310102459</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>KOLARAKE</td><td>KOLARABI</td><td>Renuka</td><td>9008848263</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>ANADURA</td><td>ANADURA</td><td>Renuka</td><td>9008848263</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>KAPALAPURAA</td><td>KAPALAPURAA</td><td>Gurunath</td><td>87262642929</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>KAPALAPURAA</td><td>ATIVALA</td><td>Gurunath</td><td>87262642929</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>KAMATANA</td><td>KAPALAPURAA</td><td>HONNIKERI</td><td>Gurunath</td><td>87262642929</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>JANAVADA</td><td>JANAVADA</td><td>Pradeep</td><td>9164103356</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>JANAVADA</td><td>KHANAJAMALAPURA</td><td>Pradeep</td><td>9164103356</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>ALIYAMBARA</td><td>ALIYAMBARA</td><td>Jagatsingh</td><td>9380977719</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>ALIYAMBARA</td><td>MAMADAPURA</td><td>Jagatsingh</td><td>9380977719</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>YARANALLIPI</td><td>YARANALLIPI</td><td>Yasmeen</td><td>7353434495</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>YARANALLIPI</td><td>YARANALLIDI</td><td>Yasmeen</td><td>7353434495</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>YARANALLIPI</td><td>BAMPALLI</td><td>Yasmeen</td><td>7353434495</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>YARANALLIPI</td><td>ISLAMPURA</td><td>Yasmeen</td><td>7353434495</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>MARAKHALA</td><td>MARAKHALA</td><td>Pradeep</td><td>9164103356</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>MARAKHALA</td><td>BENAKANALLI</td><td>Pradeep</td><td>9164103356</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>MARAKHALA</td><td>DADDAPURA</td><td>Pradeep</td><td>9164103356</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>SHREEMANDALA</td><td>SHREEMANDALA</td><td>Snehalata</td><td>8197283882</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>SHREEMANDALA</td><td>NEMATABADA</td><td>Snehalata</td><td>8197283882</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>SHREEMANDALA</td><td>NAVALASAPURA</td><td>Snehalata</td><td>8197283882</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>CHAMBOLA</td><td>CHAMBOLA</td><td>Yaseer</td><td>8951261184</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>CHAMBOLA</td><td>HIPPALAGANVA</td><td>Yaseer</td><td>8951261184</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>CHAMBOLA</td><td>KANNALLI</td><td>Yaseer</td><td>8951261184</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>ALLAPURA</td><td>ALLAPURA</td><td>Ahmed Pasha</td><td>9844319765</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>RAJANALA</td><td>RAJANALA</td><td>Bhagawan Singh</td><td>9886918989</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>RAJANALA</td><td>SIDDAPURA</td><td>Bhagawan Singh</td><td>9886918989</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>RAJANALA</td><td>SANGAVI</td><td>Bhagawan Singh</td><td>9886918989</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>RAJANALA</td><td>VILASAPURA</td><td>Bhagawan Singh</td><td>9886918989</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>CHAMBOLA</td><td>BHAIRANALLIDI</td><td>Yaseer</td><td>8951261184</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>RAJANALA</td><td>GUMATAPURA</td><td>Bhagawan Singh</td><td>9886918989</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>Bidar</td><td>JANAVADA</td><td>JANAVADA</td><td>IMAMAPURA</td><td>Yaseer</td><td>8951261184</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>TANAKUSANURA</td><td>TANAKUSANURA</td><td>TANAKUSANURA</td><td>MASID BARA IMAM</td><td>8884029945</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>TANAKUSANURA</td><td>BALATA B</td><td>BALATA B</td><td>MASID BARA IMAM</td><td>8884029945</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>TANAKUSANURA</td><td>BALATA B</td><td>BALATA K</td><td>MASID BARA IMAM</td><td>8884029945</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>TANAKUSANURA</td><td>BALATA B</td><td>CHANDORI</td><td>MASID BARA IMAM</td><td>8884029945</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>TANAKUSANURA</td><td>BEDAKUNDA</td><td>BEDAKUNDA</td><td>DATATRI</td><td>8050502856</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>TANAKUSANURA</td><td>BEDAKUNDA</td><td>HIPPALAGANVA</td><td>DATATRI</td><td>8050502856</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>TANAKUSANURA</td><td>NIDODA</td><td>NIDODA</td><td>GANESH</td><td>7406480385</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>TANAKUSANURA</td><td>NIDODA</td><td>HALAHALLI</td><td>GANESH</td><td>7406480385</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>TANAKUSANURA</td><td>KOREKALA</td><td>KOREKALA</td><td>VIKRAM</td><td>6361257936</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>TANAKUSANURA</td><td>KOREKALA</td><td>BEMBRA</td><td>VIKRAM</td><td>6361257936</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>TANAKUSANURA</td><td>KOREKALA</td><td>LINGADALLIYU</td><td>VIKRAM</td><td>6361257936</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>TANAKUSANURA</td><td>MUDHOLABI</td><td>MUDHOLABI</td><td>MALEESH</td><td>7760455690</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>TANAKUSANURA</td><td>TORANA</td><td>MUDHOLA K</td><td>MASID BARA IMAM</td><td>8050502856</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>TANAKUSANURA</td><td>SANGAMA</td><td>SANGAMA</td><td>LAXMAN</td><td>9148629158</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>LAXMAN</td><td>9148629158</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>TORANA</td><td>TORANA</td><td>PRAAVEN</td><td>9739407333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>DONAGANVA M</td><td>DONAGANVA M</td><td>SUDEER</td><td>9632166618</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>DONAGANVA M</td><td>BAVANIBIJALAGANVA</td><td>NINGAPPA</td><td>9632536979</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>SAVALI</td><td>SAVALI</td><td>SUDEER</td><td>9632166618</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>BELAKUNIBHO</td><td>BELAKUNIBHO</td><td>NINGAPPA</td><td>9632536979</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>SONALA</td><td>SONALA</td><td>LAXMAN</td><td>9148629158</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>SONALA</td><td>HORANDI</td><td>LAXMAN</td><td>9148629158</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>SONALA</td><td>BALURA K</td><td>LAXMAN</td><td>9148629158</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>MADANURA</td><td>MADANURA</td><td>ANIL</td><td>6364102300</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>MADANURA</td><td>MURGAKE</td><td>ANIL</td><td>6364102300</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>CHANDESHVARA</td><td>CHANDESHVARA</td><td>LOKESH</td><td>8197832878</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>CHANDESHVARA</td><td>KHEDA</td><td>LOKESH</td><td>8197832878</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>KHATAGANVA</td><td>KHATAGANVA</td><td>MALAPPA</td><td>9591913566</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>KHATAGANVA</td><td>RANDYALA</td><td>MALAPPA</td><td>9591913566</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>KALAGAPURA</td><td>KALAGAPURA</td><td>PRAVEEN</td><td>9739407333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>KALAGAPURA</td><td>HULASURAKHEDA</td><td>PRAVEEN</td><td>9739407333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>DIGGI</td><td>DIGGI</td><td>SHASHIKUMAR</td><td>9731679998</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>DIGGI</td><td>KOTAGYALA</td><td>SHASHIKUMAR</td><td>9731679998</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>DIGGI</td><td>RAMAPURA</td><td>SHASHIKUMAR</td><td>9731679998</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>SANGAMA</td><td>TAPASHYALA</td><td>LAXMAN</td><td>9148629158</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>SANGAMA</td><td>BASANALA</td><td>LAXMAN</td><td>9148629158</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>MUDHOLABI</td><td>KORIYALA</td><td>MALAPPA</td><td>9591913566</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>MURKI</td><td>HAKYALA</td><td>LAXMAN</td><td>9148629158</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>KAMALANAGARA</td><td>HOLA SAMUDRA</td><td>HOLA SAMUDRA</td><td>PRAVEEN</td><td>9739407333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>DABAKA</td><td>DABAKA</td><td>SANJEEVKUMAR</td><td>9060125333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>DABAKA</td><td>VAGANAGERA</td><td>SANJEEVKUMAR</td><td>9060125333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>DABAKA</td><td>AKANAPURA</td><td>SANJEEVKUMAR</td><td>9060125333</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>KARAKYALA</td><td>MALEGANVA</td><td>MALAPPA</td><td>9591913566</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>NANDIBIJALAGANVA</td><td>MUTAKHEDA</td><td>MAHESH</td><td>7259900747</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>NANDIBIJALAGANVA</td><td>CHONDIMUKHEDA</td><td>MAHESH</td><td>7259900747</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>NANDIBIJALAGANVA</td><td>NANDIBIJALAGANVA</td><td>MAHESH</td><td>7259900747</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>CHIMEGANVA</td><td>CHIMEGANVA</td><td>MALAPPA</td><td>9591913566</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>CHIMEGANVA</td><td>HANDIKERA</td><td>MALAPPA</td><td>9591913566</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>CHIKALI U</td><td>CHIKALI U</td><td>VITHAL</td><td>9284293615</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>CHIKALI U</td><td>GANESHAPURAYU</td><td>VITHAL</td><td>9284293615</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>BELAKUNIBHO</td><td>SANGANALA</td><td>NINGAPPA</td><td>9632536979</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>BELAKUNIBHO</td><td>DAREGANVA</td><td>NINGAPPA</td><td>9632536979</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>MURKI</td><td>MURKI</td><td>MAHESH GUNALE</td><td>9663634629</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                <tr><td>KAMALANAGARA</td><td>DABAKA</td><td>CHIKALI U</td><td>GANGANABEEDA</td><td>VITHAL</td><td>9284293615</td><td><span class="badge badge-status badge-active">Active</span></td></tr>
+                
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p class="mb-2">© 2025 Revenue Department | Government of Karnataka | All Rights Reserved.</p>
+      <p class="mb-0">For any inquiries, contact us at <a href="https://arvindbadagi.github.io/Portfolio/" target="_blank">Aravind Badagi</a></p>
+    </div>
+  </footer>
+
+  <script>
+    function showTab(tabId) {
+      // Hide all tab content sections
+      document.querySelectorAll('.tab-content-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Show the selected tab content
+      document.getElementById(tabId).classList.add('active');
+      
+      // Update tab buttons
+      document.querySelectorAll('.tab-buttons .btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.classList.add('btn-outline-secondary');
+      });
+      
+      // Find and activate the clicked button
+      const buttons = document.querySelectorAll('.tab-buttons .btn');
+      const activeBtn = Array.from(buttons).find(btn => 
+        btn.textContent.toLowerCase().includes(tabId.replace(/([A-Z])/g, ' $1').toLowerCase().trim())
+      );
+      
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.classList.remove('btn-outline-secondary');
+      }
+    }
+
+    function exportToExcel(tableId) {
+      const table = document.getElementById(`${tableId}-table`);
+      const wb = XLSX.utils.table_to_book(table);
+      XLSX.writeFile(wb, `${tableId.replace('-', '_')}_data.xlsx`);
+      
+      // Add a small visual feedback
+      const btn = event.target;
+      btn.innerHTML = '<i class="fas fa-check me-2"></i>Exported!';
+      btn.style.backgroundColor = '#28a745';
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fas fa-file-excel me-2"></i>Export to Excel';
+        btn.style.backgroundColor = '';
+      }, 2000);
+    }
+
+    // Initialize the first tab as active
+    document.addEventListener('DOMContentLoaded', function() {
+      showTab('tahsildars');
+    });
+  </script>
+</body>
+</html>
