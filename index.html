@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>DC, Bidar | Revenue Department Bidar</title>
-    
+
     <!-- SECURITY: Prevent search engines from caching or displaying source -->
     <meta name="robots" content="noindex, nofollow">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    
+
     <!-- SECURITY: Disable browser's save password/autofill to reduce inspection -->
     <input type="text" style="display:none">
     <input type="password" style="display:none">
@@ -26,15 +26,19 @@
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            overflow: hidden;
+            /* Lock scrolling until password is entered */;
         }
         /* Allow selection only on input fields for usability */
-        input, textarea, [contenteditable="true"] {
+        input,
+        textarea,
+        [contenteditable="true"] {
             -webkit-user-select: text;
             -moz-user-select: text;
             -ms-user-select: text;
             user-select: text;
         }
-        
+
         :root {
             --brand-magenta: #7b0046;
             --brand-magenta-light: #a0165d;
@@ -46,12 +50,16 @@
             --gov-blue: #0b2c5d;
             --gov-light-blue: #1e4fa3;
             --gov-border: #d1d5db;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
-            --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
             --container-xl: 1440px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
             font-family: 'Inter', 'Noto Sans Kannada', sans-serif;
             background-color: var(--bg-light);
@@ -60,8 +68,130 @@
             transition: all 0.3s ease;
         }
 
-        a { text-decoration: none; transition: 0.3s; }
-        ul { list-style: none; }
+        a {
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        ul {
+            list-style: none;
+        }
+
+        /* ========== PASSWORD MODAL OVERLAY ========== */
+        #passwordOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 23, 42, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            backdrop-filter: blur(8px);
+        }
+
+        .password-box {
+            background: #ffffff;
+            padding: 40px 35px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: 420px;
+            width: 92%;
+            border-top: 6px solid var(--brand-magenta);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .password-box .lock-icon {
+            font-size: 3.5rem;
+            color: var(--brand-magenta);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .password-box h3 {
+            color: var(--brand-magenta);
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .password-box .sub-text {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .password-box input[type="password"] {
+            width: 100%;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            outline: none;
+            font-size: 1rem;
+            text-align: center;
+            transition: border-color 0.3s;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .password-box input[type="password"]:focus {
+            border-color: var(--brand-magenta);
+            box-shadow: 0 0 0 4px rgba(123, 0, 70, 0.1);
+        }
+
+        .password-box button {
+            background: linear-gradient(135deg, var(--brand-magenta), var(--brand-magenta-light));
+            color: #ffffff;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .password-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(123, 0, 70, 0.35);
+        }
+
+        .password-box button:active {
+            transform: scale(0.97);
+        }
+
+        .error-msg {
+            color: #dc2626;
+            font-size: 0.8rem;
+            margin-top: 12px;
+            display: none;
+            font-weight: 600;
+        }
+
+        .password-box .hint-text {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-top: 14px;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 14px;
+        }
 
         /* ========== OFFICIAL BANNER HEADER ========== */
         .official-header {
@@ -75,51 +205,111 @@
             position: relative;
             border-bottom: 4px solid var(--brand-gold);
             text-align: center;
-            box-shadow: inset 0 -10px 20px rgba(0,0,0,0.2);
+            box-shadow: inset 0 -10px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .profile-side { display: flex; align-items: center; gap: 15px; color: white; }
-        .profile-side.right { justify-content: flex-end; text-align: right; }
-        
-        .gov-photo { 
-            width: 80px; height: 80px; border-radius: 50%; 
-            border: 3px solid var(--brand-gold); padding: 2px;
-            object-fit: cover; background: white;
+        .profile-side {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+        }
+        .profile-side.right {
+            justify-content: flex-end;
+            text-align: right;
         }
 
-        .profile-name { font-weight: 700; font-size: 0.95rem; }
-        .profile-desig { font-size: 0.75rem; opacity: 0.9; }
+        .gov-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--brand-gold);
+            padding: 2px;
+            object-fit: cover;
+            background: white;
+        }
 
-        .header-center .emblem { width: 60px; margin-bottom: 10px; }
-        .header-center h2 { font-size: 0.8rem; letter-spacing: 2px; color: var(--brand-gold); text-transform: uppercase; }
-        .header-center h1 { font-family: 'Merriweather', serif; font-size: 1.8rem; font-weight: 900; margin: 5px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-        .header-center p { font-size: 0.85rem; opacity: 0.8; }
+        .profile-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .profile-desig {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .header-center .emblem {
+            width: 60px;
+            margin-bottom: 10px;
+        }
+        .header-center h2 {
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            color: var(--brand-gold);
+            text-transform: uppercase;
+        }
+        .header-center h1 {
+            font-family: 'Merriweather', serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin: 5px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .header-center p {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
 
         /* Stats Bar */
-        .stats-bar { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-        .stat-pill { 
-            background: white; color: var(--brand-magenta); 
-            padding: 4px 12px; border-radius: 4px; 
-            font-size: 0.75rem; font-weight: 800;
-            display: flex; align-items: center; gap: 5px;
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .stat-pill {
+            background: white;
+            color: var(--brand-magenta);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         /* Language Toggle */
         .lang-container {
-            position: absolute; top: 15px; right: 20px;
-            display: flex; align-items: center; gap: 10px;
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .lang-toggle {
-            width: 50px; height: 24px; background: rgba(255,255,255,0.2);
-            border-radius: 12px; border: 1px solid var(--brand-gold);
-            cursor: pointer; position: relative;
+            width: 50px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            border: 1px solid var(--brand-gold);
+            cursor: pointer;
+            position: relative;
         }
         .toggle-knob {
-            width: 18px; height: 18px; background: var(--brand-gold);
-            border-radius: 50%; position: absolute; top: 2px; left: 3px;
+            width: 18px;
+            height: 18px;
+            background: var(--brand-gold);
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 3px;
             transition: 0.3s;
         }
-        body.kannada .toggle-knob { left: 27px; }
+        body.kannada .toggle-knob {
+            left: 27px;
+        }
 
         /* ========== NAVIGATION ========== */
         .main-nav {
@@ -127,207 +317,610 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid rgba(255,213,74,0.3);
+            border-bottom: 1px solid rgba(255, 213, 74, 0.3);
         }
-        .nav-inner { max-width: var(--container-xl); margin: 0 auto; display: flex; justify-content: center; }
-        .nav-menu { 
-            display: flex; 
-            flex-wrap: wrap; 
-            justify-content: center; 
+        .nav-inner {
+            max-width: var(--container-xl);
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+        }
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             align-items: center;
         }
-        .nav-menu > li { position: relative; }
-        .nav-menu > li > a, .nav-menu > li > button {
-            color: #fff; 
-            padding: 18px 16px; 
-            display: block; 
-            font-weight: 600; 
-            font-size: 0.85rem; 
-            text-transform: uppercase; 
-            background: none; 
-            border: none; 
+        .nav-menu>li {
+            position: relative;
+        }
+        .nav-menu>li>a,
+        .nav-menu>li>button {
+            color: #fff;
+            padding: 18px 16px;
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            background: none;
+            border: none;
             cursor: pointer;
             transition: 0.3s;
             white-space: nowrap;
         }
-        .nav-menu > li > a:hover, .nav-menu > li > button:hover { 
-            background: rgba(255,255,255,0.15); 
-            color: var(--brand-gold); 
+        .nav-menu>li>a:hover,
+        .nav-menu>li>button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--brand-gold);
         }
-        
+
         .dropdown {
-            position: absolute; top: 100%; left: 0; background: #fff; min-width: 260px;
-            box-shadow: var(--shadow-md); border-radius: 0 0 8px 8px; display: none; z-index: 100;
-            max-height: 80vh; overflow-y: auto;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #fff;
+            min-width: 260px;
+            box-shadow: var(--shadow-md);
+            border-radius: 0 0 8px 8px;
+            display: none;
+            z-index: 100;
+            max-height: 80vh;
+            overflow-y: auto;
         }
-        .has-dropdown:hover .dropdown { display: block; }
-        .dropdown li a { padding: 10px 20px; display: block; color: var(--text-main); font-size: 0.85rem; border-bottom: 1px solid #f1f5f9; }
-        .dropdown li a:hover { background: #f8fafc; color: var(--brand-magenta); padding-left: 25px; }
+        .has-dropdown:hover .dropdown {
+            display: block;
+        }
+        .dropdown li a {
+            padding: 10px 20px;
+            display: block;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .dropdown li a:hover {
+            background: #f8fafc;
+            color: var(--brand-magenta);
+            padding-left: 25px;
+        }
 
         /* ========== ANNOUNCEMENT ========== */
-        .announcement-container { max-width: 1000px; margin: 20px auto; }
+        .announcement-container {
+            max-width: 1000px;
+            margin: 20px auto;
+        }
         .announcement-box {
-            background: #fff; border: 1px solid #e2e8f0; border-radius: 50px;
-            display: flex; align-items: center; padding: 5px 20px; box-shadow: var(--shadow-sm);
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            padding: 5px 20px;
+            box-shadow: var(--shadow-sm);
         }
-        .ann-label { 
-            background: var(--brand-magenta); color: #fff; padding: 8px 15px; 
-            border-radius: 25px; font-weight: 700; font-size: 0.8rem; margin-right: 15px; white-space: nowrap;
+        .ann-label {
+            background: var(--brand-magenta);
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-right: 15px;
+            white-space: nowrap;
         }
-        .ann-content { flex: 1; text-align: center; font-weight: 600; font-size: 0.95rem; color: #334155; }
-        .ann-controls button { background: none; border: none; padding: 5px; cursor: pointer; color: var(--brand-magenta); font-size: 1.2rem; }
+        .ann-content {
+            flex: 1;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #334155;
+        }
+        .ann-controls button {
+            background: none;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            color: var(--brand-magenta);
+            font-size: 1.2rem;
+        }
 
         /* ========== HERO CAROUSEL ========== */
-        .hero-section { max-width: var(--container-xl); margin: 0 auto 30px; padding: 0 20px; }
-        .hero-slider { height: 400px; border-radius: 20px; overflow: hidden; position: relative; box-shadow: var(--shadow-md); }
-        .hero-slide { position: absolute; inset: 0; opacity: 0; transition: 1s ease-in-out; }
-        .hero-slide.active { opacity: 1; }
-        .hero-slide img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-section {
+            max-width: var(--container-xl);
+            margin: 0 auto 30px;
+            padding: 0 20px;
+        }
+        .hero-slider {
+            height: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow-md);
+        }
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: 1s ease-in-out;
+        }
+        .hero-slide.active {
+            opacity: 1;
+        }
+        .hero-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
         .hero-caption {
-            position: absolute; bottom: 30px; left: 30px; 
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); color: #fff;
-            padding: 20px; border-radius: 12px; max-width: 500px;
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 500px;
         }
 
         /* ========== MAIN GRID CONTENT ========== */
-        .main-content { max-width: var(--container-xl); margin: 0 auto; padding: 0 20px 60px; }
-        .grid-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .search-bar { position: relative; width: 350px; }
-        .search-bar input { width: 100%; padding: 12px 40px 12px 15px; border-radius: 30px; border: 1px solid #cbd5e1; outline: none; }
-        .search-bar i { position: absolute; right: 15px; top: 12px; color: var(--text-muted); }
+        .main-content {
+            max-width: var(--container-xl);
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+        .grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .search-bar {
+            position: relative;
+            width: 350px;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border-radius: 30px;
+            border: 1px solid #cbd5e1;
+            outline: none;
+        }
+        .search-bar i {
+            position: absolute;
+            right: 15px;
+            top: 12px;
+            color: var(--text-muted);
+        }
 
-        .links-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
         .card {
-            background: #fff; border-radius: 12px; padding: 18px;
-            border-top: 4px solid var(--brand-magenta); box-shadow: var(--shadow-sm);
+            background: #fff;
+            border-radius: 12px;
+            padding: 18px;
+            border-top: 4px solid var(--brand-magenta);
+            box-shadow: var(--shadow-sm);
             transition: 0.3s;
         }
-        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
-        .card h3 { font-size: 0.9rem; color: var(--gov-light-blue); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; text-transform: uppercase; }
-        .card ul li { margin-bottom: 6px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
-        .card ul li::before { content: "\F26A"; font-family: "bootstrap-icons"; color: var(--brand-magenta); font-size: 0.7rem; }
-        .card ul li a { color: var(--text-main); font-weight: 500; }
-        .card ul li a:hover { color: var(--brand-magenta-light); text-decoration: underline; }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        .card h3 {
+            font-size: 0.9rem;
+            color: var(--gov-light-blue);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .card ul li {
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card ul li::before {
+            content: "\F26A";
+            font-family: "bootstrap-icons";
+            color: var(--brand-magenta);
+            font-size: 0.7rem;
+        }
+        .card ul li a {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+        .card ul li a:hover {
+            color: var(--brand-magenta-light);
+            text-decoration: underline;
+        }
 
         /* ========== FOOTER ========== */
-        .gov-footer { background: #0f172a; color: #f8fafc; padding: 60px 0 20px; }
+        .gov-footer {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 60px 0 20px;
+        }
         .footer-top {
-            max-width: var(--container-xl); margin: 0 auto; padding: 0 20px;
-            display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 40px;
-            border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 40px;
+            max-width: var(--container-xl);
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 40px;
         }
         .footer-links h4 {
             font-size: 1rem;
             margin-bottom: 6px;
         }
-        .footer-links ul { padding-left: 0; margin: 0; }
-        .footer-links ul li { list-style: none; margin-bottom: 4px; }
-        .footer-links ul li a { font-size: 0.85rem; color: #475569; text-decoration: none; }
-        .footer-links ul li a:hover { color: #7b0046; text-decoration: underline; }
-        footer { padding: 18px 0; }
-        .footer-container { gap: 24px; }
-        .footer-brand h3 { font-size: 1.05rem; margin-bottom: 6px; }
-        .footer-brand p { font-size: 0.85rem; line-height: 1.4; margin-bottom: 6px; }
-        .footer-links h4 { font-size: 0.9rem; margin-bottom: 6px; }
-        .footer-links ul li { margin-bottom: 4px; }
-        .footer-links ul li a { font-size: 0.85rem; }
-        .footer-support p { font-size: 0.85rem; margin-bottom: 4px; }
-        .footer-links h4 { color: #fff; margin-bottom: 20px; border-left: 3px solid var(--brand-gold); padding-left: 10px; text-transform: uppercase; font-size: 0.5rem; }
-        .footer-links ul li a { color: #ffffff !important; opacity: 0.9; }
-        .footer-links ul li a:hover { color: var(--brand-gold) !important; opacity: 1; }
-        .footer-bottom { text-align: center; padding-top: 20px; font-size: 0.8rem; color: #94a3b8; }
-        .footer-bottom a { color: var(--brand-gold); font-weight: bold; }
+        .footer-links ul {
+            padding-left: 0;
+            margin: 0;
+        }
+        .footer-links ul li {
+            list-style: none;
+            margin-bottom: 4px;
+        }
+        .footer-links ul li a {
+            font-size: 0.85rem;
+            color: #475569;
+            text-decoration: none;
+        }
+        .footer-links ul li a:hover {
+            color: #7b0046;
+            text-decoration: underline;
+        }
+        footer {
+            padding: 18px 0;
+        }
+        .footer-container {
+            gap: 24px;
+        }
+        .footer-brand h3 {
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+        }
+        .footer-brand p {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+        .footer-links h4 {
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+        .footer-links ul li {
+            margin-bottom: 4px;
+        }
+        .footer-links ul li a {
+            font-size: 0.85rem;
+        }
+        .footer-support p {
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+        .footer-links h4 {
+            color: #fff;
+            margin-bottom: 20px;
+            border-left: 3px solid var(--brand-gold);
+            padding-left: 10px;
+            text-transform: uppercase;
+            font-size: 0.5rem;
+        }
+        .footer-links ul li a {
+            color: #ffffff !important;
+            opacity: 0.9;
+        }
+        .footer-links ul li a:hover {
+            color: var(--brand-gold) !important;
+            opacity: 1;
+        }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        .footer-bottom a {
+            color: var(--brand-gold);
+            font-weight: bold;
+        }
 
         /* ========== GO TO TOP BUTTON ========== */
         #goTopBtn {
-            position: fixed; bottom: 100px; right: 30px; width: 48px; height: 48px;
-            border-radius: 50%; border: none; background: var(--brand-magenta); color: #fff;
-            font-size: 1.5rem; cursor: pointer; box-shadow: var(--shadow-md); display: none; z-index: 2000;
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: var(--brand-magenta);
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            display: none;
+            z-index: 2000;
             transition: all 0.3s ease;
         }
-        #goTopBtn:hover { background: var(--brand-magenta-light); transform: scale(1.1); }
+        #goTopBtn:hover {
+            background: var(--brand-magenta-light);
+            transform: scale(1.1);
+        }
 
         /* ========== WHATSAPP FEEDBACK BUTTON ========== */
         .whatsapp-feedback {
-            position: fixed; bottom: 30px; left: 30px; background-color: #25d366; color: #fff;
-            width: 60px; height: 60px; border-radius: 50%; text-align: center; font-size: 30px;
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index: 2000; display: flex;
-            align-items: center; justify-content: center; transition: transform 0.3s ease; text-decoration: none;
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background-color: #25d366;
+            color: #fff;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+            text-decoration: none;
         }
-        .whatsapp-feedback:hover { transform: scale(1.1); color: #fff; text-decoration: none; }
+        .whatsapp-feedback:hover {
+            transform: scale(1.1);
+            color: #fff;
+            text-decoration: none;
+        }
         .whatsapp-feedback::after {
-            content: "Feedback"; position: absolute; left: 70px; background: #333; color: #fff;
-            padding: 5px 10px; border-radius: 5px; font-size: 12px; opacity: 0; pointer-events: none;
-            transition: 0.3s; white-space: nowrap;
+            content: "Feedback";
+            position: absolute;
+            left: 70px;
+            background: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+            white-space: nowrap;
         }
-        .whatsapp-feedback:hover::after { opacity: 1; }
+        .whatsapp-feedback:hover::after {
+            opacity: 1;
+        }
 
         /* ========== KANNADA LANGUAGE STYLE ========== */
-        body.kannada { font-family: 'Noto Sans Kannada', 'Inter', sans-serif; }
-        .kannada .header-center h1 { font-family: 'Noto Sans Kannada', 'Merriweather', serif; }
+        body.kannada {
+            font-family: 'Noto Sans Kannada', 'Inter', sans-serif;
+        }
+        .kannada .header-center h1 {
+            font-family: 'Noto Sans Kannada', 'Merriweather', serif;
+        }
 
         /* ========== VISITOR COUNTER ========== */
-        .footer-visitor { margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 0.85rem; }
-        .footer-visitor i { color: var(--brand-gold); }
-        .footer-visitor strong { color: #fff; font-size: 1rem; }
+        .footer-visitor {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+        .footer-visitor i {
+            color: var(--brand-gold);
+        }
+        .footer-visitor strong {
+            color: #fff;
+            font-size: 1rem;
+        }
 
         /* ========== RESPONSIVE DESIGN ========== */
-        @media (max-width: 1200px) { 
-            .links-grid { grid-template-columns: repeat(3, 1fr); } 
-            .lang-container { position: relative; top: 0; right: 0; justify-content: center; margin-top: 10px; grid-column: 1 / -1; }
-            .nav-menu > li > a, .nav-menu > li > button { padding: 18px 12px; font-size: 0.8rem; }
+        @media (max-width: 1200px) {
+            .links-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .lang-container {
+                position: relative;
+                top: 0;
+                right: 0;
+                justify-content: center;
+                margin-top: 10px;
+                grid-column: 1 / -1;
+            }
+            .nav-menu>li>a,
+            .nav-menu>li>button {
+                padding: 18px 12px;
+                font-size: 0.8rem;
+            }
         }
-        @media (max-width: 900px) { 
-            .official-header { grid-template-columns: 1fr; gap: 15px; padding: 20px; text-align: center; }
-            .profile-side, .profile-side.right { justify-content: center; text-align: center; }
-            .profile-side.right { flex-direction: row-reverse; }
-            .lang-container { position: static; margin-top: 10px; justify-content: center; }
-            .links-grid { grid-template-columns: repeat(2, 1fr); } 
-            .footer-top { grid-template-columns: 1fr 1fr; } 
-            .search-bar { width: 250px; }
-            .nav-menu { justify-content: flex-start; }
+        @media (max-width: 900px) {
+            .official-header {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 20px;
+                text-align: center;
+            }
+            .profile-side,
+            .profile-side.right {
+                justify-content: center;
+                text-align: center;
+            }
+            .profile-side.right {
+                flex-direction: row-reverse;
+            }
+            .lang-container {
+                position: static;
+                margin-top: 10px;
+                justify-content: center;
+            }
+            .links-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-top {
+                grid-template-columns: 1fr 1fr;
+            }
+            .search-bar {
+                width: 250px;
+            }
+            .nav-menu {
+                justify-content: flex-start;
+            }
         }
-        @media (max-width: 600px) { 
-            .links-grid { grid-template-columns: 1fr; } 
-            .footer-top { grid-template-columns: 1fr; } 
-            .lang-container { flex-direction: column; gap: 5px; }
-            .search-bar { width: 100%; margin-top: 15px; }
-            .grid-header { flex-direction: column; align-items: flex-start; }
-            .whatsapp-feedback { bottom: 80px; left: 20px; width: 50px; height: 50px; font-size: 24px; }
-            #goTopBtn { bottom: 80px; right: 20px; width: 40px; height: 40px; font-size: 1.2rem; }
-            .nav-menu > li > a, .nav-menu > li > button { padding: 14px 8px; font-size: 0.75rem; }
+        @media (max-width: 600px) {
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-top {
+                grid-template-columns: 1fr;
+            }
+            .lang-container {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .search-bar {
+                width: 100%;
+                margin-top: 15px;
+            }
+            .grid-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .whatsapp-feedback {
+                bottom: 80px;
+                left: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+            #goTopBtn {
+                bottom: 80px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            .nav-menu>li>a,
+            .nav-menu>li>button {
+                padding: 14px 8px;
+                font-size: 0.75rem;
+            }
         }
 
         /* Professional Marquee Styling */
         .news-ticker-container {
-            background: #fff; height: 40px; display: flex; align-items: center;
-            border-bottom: 2px solid var(--brand-magenta); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            overflow: hidden; position: relative;
+            background: #fff;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--brand-magenta);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
         }
         .ticker-label {
-            background: var(--brand-magenta); color: var(--brand-gold); padding: 0 25px; height: 100%;
-            display: flex; align-items: center; font-weight: 700; font-size: 0.85rem;
-            z-index: 20; position: relative; clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%); white-space: nowrap;
+            background: var(--brand-magenta);
+            color: var(--brand-gold);
+            padding: 0 25px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            z-index: 20;
+            position: relative;
+            clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
+            white-space: nowrap;
         }
         .ticker-new-pill {
-            background: #ff0000; color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
-            margin-left: 10px; font-weight: 800; animation: ticker-pulse 1.2s infinite; letter-spacing: 1px;
+            background: #ff0000;
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 10px;
+            font-weight: 800;
+            animation: ticker-pulse 1.2s infinite;
+            letter-spacing: 1px;
         }
         @keyframes ticker-pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,0,0,0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255,0,0,0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,0,0,0); }
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+            }
         }
-        .ticker-wrap { flex: 1; overflow: hidden; }
-        .ticker-move { display: inline-block; white-space: nowrap; padding-left: 100%; animation: ticker-scroll 30s linear infinite; }
-        .ticker-item { display: inline-block; padding: 0 2rem; font-size: 0.9rem; color: var(--brand-magenta); font-weight: 600; text-decoration: none; }
-        .ticker-item i { margin-right: 8px; color: var(--brand-magenta-light); }
-        .ticker-item:hover { color: #000; text-decoration: underline; }
-        @keyframes ticker-scroll { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
-        .news-ticker-container:hover .ticker-move { animation-play-state: paused; }
+        .ticker-wrap {
+            flex: 1;
+            overflow: hidden;
+        }
+        .ticker-move {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%;
+            animation: ticker-scroll 30s linear infinite;
+        }
+        .ticker-item {
+            display: inline-block;
+            padding: 0 2rem;
+            font-size: 0.9rem;
+            color: var(--brand-magenta);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .ticker-item i {
+            margin-right: 8px;
+            color: var(--brand-magenta-light);
+        }
+        .ticker-item:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+        @keyframes ticker-scroll {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+            100% {
+                transform: translate3d(-100%, 0, 0);
+            }
+        }
+        .news-ticker-container:hover .ticker-move {
+            animation-play-state: paused;
+        }
     </style>
 </head>
 <body id="mainBody">
+
+    <!-- ========== PASSWORD ACCESS MODAL ========== -->
+    <div id="passwordOverlay">
+        <div class="password-box">
+            <span class="lock-icon"><i class="bi bi-shield-lock-fill"></i></span>
+            <h3>Restricted Access</h3>
+            <p class="sub-text">This is a secured portal for Revenue Department officials. Please enter the administrative password to continue.</p>
+            <input type="password" id="sitePasswordInput" placeholder="Enter Password" onkeypress="handleKeyPress(event)" autofocus>
+            <button onclick="checkSitePassword()"><i class="bi bi-key-fill"></i> &nbsp;Access Portal</button>
+            <div id="passwordError" class="error-msg"><i class="bi bi-exclamation-triangle-fill"></i> Incorrect password. Please try again.</div>
+            <div class="hint-text">🔒 Authorized personnel only</div>
+        </div>
+    </div>
 
     <!-- HEADER (Full Original Content) -->
     <header class="official-header">
@@ -376,16 +969,16 @@
                 <li class="has-dropdown"><button data-en="Other Applications" data-kn="ಇತರೆ ಅಪ್ಲಿಕೇಶನ್ಗಳು"><span class="nav-text">Other Applications</span> <i class="bi bi-caret-down-fill"></i></button>
                     <ul class="dropdown"><li><a href="javascript:void(0)" onclick="scrollToCard('RCCMS')" data-en="RCCMS" data-kn="ಆರ್.ಸಿ.ಸಿ.ಎಂ.ಎಸ್">RCCMS</a></li><li><a href="javascript:void(0)" onclick="scrollToCard('Sub-Register')" data-en="Sub Register" data-kn="ಸಬ್ ರಿಜಿಸ್ಟರ್">Sub Register</a></li><li><a href="javascript:void(0)" onclick="scrollToCard('Record-Room')" data-en="Record Room" data-kn="ರೆಕಾರ್ಡ್ ಕೊಠಡಿ">Record Room</a></li><li><a href="javascript:void(0)" onclick="scrollToCard('Parihara')" data-en="Parihara" data-kn="ಪರಿಹಾರ">Parihara</a></li><li><a href="javascript:void(0)" onclick="scrollToCard('Aadhar-Seeding-RTC')" data-en="Aadhar Seeding & E-Pouthi" data-kn="ಆಧಾರ ಸೀಡಿಂಗ್ ಮತ್ತು ಇ-ಪೌತಿ">Aadhar Seeding & E-Pouthi</a></li><li><a href="javascript:void(0)" onclick="scrollToCard('Bagair-Hukum-Rejection')" data-en="Bagair Hukum Rejection" data-kn="ಬಗೈರ್ ಹುಕುಂ ನಿರಾಕರಣೆ">Bagair Hukum Rejection</a></li><li><a href="javascript:void(0)" onclick="scrollToCard('Bagair-Hukum')" data-en="Bagair Hukum" data-kn="ಬಗೈರ್ ಹುಕುಂ">Bagair Hukum</a></li><li><a href="javascript:void(0)" onclick="scrollToCard('Form-1-to-5')" data-en="Form 1 to 5" data-kn="ಫಾರಂ 1 ರಿಂದ 5">Form 1 to 5</a></li><li><a href="javascript:void(0)" onclick="scrollToCard('Reports')" data-en="Reports" data-kn="ವರದಿಗಳು">Reports</a></li><li><a href="javascript:void(0)" onclick="scrollToCard('Ex-Servicemen')" data-en="Ex Servicemen" data-kn="ಮಾಜಿ ಸೇವಕರು">Ex Servicemen</a></li><li><a href="javascript:void(0)" onclick="scrollToCard('Land-Availability')" data-en="Land Availability" data-kn="ಭೂ ಲಭ್ಯತೆ">Land Availability</a></li><li><a href="javascript:void(0)" onclick="scrollToCard('Plantation-on-Lease')" data-en="Plantation on Lease" data-kn="ಕರಾರಿನ ಮೇಲೆ ತೋಟಗಾರಿಕೆ">Plantation on Lease</a></li><li><a href="javascript:void(0)" onclick="scrollToCard('Softwares')" data-en="Softwares" data-kn="ಮೊಬೈಲ್ ಅಪ್ಲಿಕೇಶನ್ಗಳು">Softwares</a></li></ul>
                 </li>
-               
+
                 <li><a href="https://app.powerbi.com/view?r=eyJrIjoiYWQ0MzExOGQtYTY4NC00ODUyLTkyOGQtYTU4ZDY1ZDk4YjBkIiwidCI6ImRmODY3OWNkLWE4MGUtNDVkOC05OWFjLWM4M2VkN2ZmOTVhMCJ9" data-en="Parihara" data-kn="ಪರಿಹಾರ">Parihara</a></li>
                 <li><a href="https://bhoomibidar.github.io/pouthi/" data-en="Pouthi" data-kn="ಪೌತಿ">Pouthi</a></li>
                 <li><a href="https://bhoomibidar.github.io/village/" data-en="Village" data-kn="ಗ್ರಾಮ">Village</a></li>
-                 <li><a href="https://bhoomibidar.github.io/calllogsystem/" data-en="Call Log System" data-kn="ಕಾಲ್ ಲಾಗ್ ವ್ಯವಸ್ಥೆ">Call Log System</a></li>
-                 <li><a href="web.html" target="_blank" data-en="Bhoomi IP" data-kn="ಭೂಮಿ ಐಪಿ">Bhoomi IP</a></li>
-                  <li><a href="https://bidarcls.onrender.com/" target="_blank" data-en="BHOOMI CLS " data-kn="ಭೂಮಿ">BHOOMI CLS </a></li>
+                <li><a href="https://bhoomibidar.github.io/calllogsystem/" data-en="Call Log System" data-kn="ಕಾಲ್ ಲಾಗ್ ವ್ಯವಸ್ಥೆ">Call Log System</a></li>
+                <li><a href="web.html" target="_blank" data-en="Bhoomi IP" data-kn="ಭೂಮಿ ಐಪಿ">Bhoomi IP</a></li>
+                <li><a href="https://bidarcls.onrender.com/" target="_blank" data-en="BHOOMI CLS " data-kn="ಭೂಮಿ">BHOOMI CLS </a></li>
                 <li><a href="https://bhoomibidar.github.io/forest/" target="_blank" data-en="Deemed Forest " data-kn="ಭೂಮಿ">Deemed Forest </a></li>
                 <li><a href="Officers.html" target="_blank" data-en="Contact Us" data-kn="ಸಂಪರ್ಕಿಸಿ">Contact Us</a></li>
-                
+
             </ul>
         </div>
         <div class="news-ticker-container">
@@ -404,7 +997,7 @@
     <main class="main-content">
         <div class="grid-header"><h2 style="font-size:1.2rem;color:var(--brand-magenta)" data-en="QUICK SERVICE LINKS" data-kn="ತ್ವರಿತ ಸೇವಾ ಕೊಂಡಿಗಳು">QUICK SERVICE LINKS</h2><div class="search-bar"><input type="text" id="siteSearch" placeholder="Search for a service..." data-en="Search for a service..." data-kn="ಸೇವೆಯನ್ನು ಹುಡುಕಿ..." onkeyup="filterServices()"><i class="bi bi-search"></i></div></div>
         <div class="links-grid" id="linksGrid">
-            <!-- All original cards fully included (Land-Conversion, RTC-Management, Mojini, Bhoomi, Bagair-Hukum-Rejection, Land-Beat, RTC-Online, Record-Room, Ex-Servicemen, Sub-Register, Parihara, Bagair-Hukum, Form-1-to-5, Reports, Aadhar-Seeding-RTC, RCCMS, Land-Availability, Plantation-on-Lease, Softwares, RRT-CORRECTION) -->
+            <!-- All original cards fully included -->
             <div class="card" id="Land-Conversion"><h3><i class="bi bi-diagram-3"></i> <span data-en="Land Conversion" data-kn="ಭೂ ಪರಿವರ್ತನೆ">Land Conversion</span></h3><ul><li><a href="http://landrecords.karnataka.gov.in/rd" target="_blank">Home</a></li><li><a href="https://landrecords.karnataka.gov.in/service80" target="_blank">Status</a></li><li><a href="https://landconversion.karnataka.gov.in/service99" target="_blank">Order Print</a></li><li><a href="https://landrecords.karnataka.gov.in/citizenportal/" target="_blank">Citizen Login</a></li><li><a href="https://landrecords.karnataka.gov.in/service132/Home/Report" target="_blank">Approved Dates</a></li><li><a href="https://landconversion.karnataka.gov.in/Service74/afdlcreport/" target="_blank">Report with Userid</a></li><li><a href="https://landrecords.karnataka.gov.in/service52/" target="_blank">Patta Land</a></li><li><a href="https://drive.google.com/file/d/1kfVSS16jLfueQHF93jD4UqA5TvapA22n/view" target="_blank">User Manual</a></li></ul></div>
             <div class="card" id="RTC-Management"><h3><i class="bi bi-hdd-stack"></i> <span data-en="RTC Mgmt" data-kn="ಆರ್.ಟಿ.ಸಿ ನಿರ್ವಹಣೆ">RTC Mgmt</span></h3><ul><li><a href="https://landrecords.karnataka.gov.in/Service109/rtcmgm/" target="_blank">Home</a></li><li><a href="https://rdservices.karnataka.gov.in/service109/rrtcorrection/" target="_blank">RRT Correction</a></li><li><a href="https://rdservices.karnataka.gov.in/service109/RRTCMreports/" target="_blank">RRT Report</a></li><li><a href="https://docs.google.com/document/d/13DuohMS4SfsbplyqEV-fe_l1tn8DWGsJ/edit" target="_blank">RRT Manual</a></li><li><a href="https://landrecords.karnataka.gov.in/service109/rtc_mgm_mis/" target="_blank">Report & Status</a></li><li><a href="https://landrecords.karnataka.gov.in/service85/Login1.aspx" target="_blank">Old Jslip Approval AC</a></li><li><a href="https://parihara.karnataka.gov.in/service82/" target="_blank">SLAO Case Worker</a></li><li><a href="https://parihara.karnataka.gov.in/service83" target="_blank">SLAO Login</a></li><li><a href="https://drive.google.com/file/d/1ijq0FEE7QNTJ9BG_QC0HdEZeCxgiPsE6/view" target="_blank">User Manual</a></li></ul></div>
             <div class="card" id="Mojini"><h3><i class="bi bi-rulers"></i> <span data-en="Mojini" data-kn="ಮೊಜಿನಿ">Mojini</span></h3><ul><li><a href="https://www.rdservices.karnataka.gov.in/" target="_blank">Home</a></li><li><a href="https://bhoomojini.karnataka.gov.in/service55" target="_blank">Darkasth Phodi</a></li><li><a href="https://bhoomojini.karnataka.gov.in/SERVICE30/RRTCase/RRT_Report" target="_blank">Datewise Report</a></li><li><a href="https://bhoomojini.karnataka.gov.in/service24/" target="_blank">RRT & LND Report</a></li><li><a href="https://bhoomojini.karnataka.gov.in/service19/" target="_blank">View Sketch</a></li><li><a href="https://bhoomojini.karnataka.gov.in/service39/" target="_blank">Akarband</a></li><li><a href="https://landrecords.karnataka.gov.in/Service10" target="_blank">Phodi Status and Report</a></li><li><a href="https://bhoomojini.karnataka.gov.in/service19/report/Applicationdetails" target="_blank">Sketch Printing</a></li><li><a href="https://bhoomojini.karnataka.gov.in/oscitizen/" target="_blank">Survey Documents For Citizen</a></li></ul></div>
@@ -419,48 +1012,48 @@
             <div class="card" id="Bagair-Hukum"><h3><i class="bi bi-newspaper"></i> <span data-en="Bagair Hukum" data-kn="ಬಗೈರ್ ಹುಕುಂ">Bagair Hukum</span></h3><ul><li><a href="https://rdservices.karnataka.gov.in/service54" target="_blank">Main website</a></li><li><a href="https://rdservices.karnataka.gov.in/service43" target="_blank">VAO Login</a></li><li><a href="https://rdservices.karnataka.gov.in/service45" target="_blank">RI Login</a></li><li><a href="https://rdservices.karnataka.gov.in/service45" target="_blank">DT Login</a></li><li><a href="https://rdservices.karnataka.gov.in/service45" target="_blank">Tahsildar Login</a></li><li><a href="https://rdservices.karnataka.gov.in/service45" target="_blank">Committee</a></li><li><a href="https://rdservices.karnataka.gov.in/service45" target="_blank">TCCW</a></li><li><a href="https://rdservices.karnataka.gov.in/service87" target="_blank">Application Status</a></li><li><a href="https://landrecords.karnataka.gov.in/service131/form57/" target="_blank">Form 57 Report</a></li><li><a href="https://bhoomi.karnataka.gov.in/FORM5053/" target="_blank">Form 50 53 Count</a></li><li><a href="https://bhoomojini.karnataka.gov.in/service55" target="_blank">BH Mojini Status</a></li><li><a href="https://landrecords.karnataka.gov.in/service149" target="_blank">Form 50 & 53 Rec Cases</a></li><li><a href="https://docs.google.com/presentation/d/1yTfMzC8J0UYHy14w69OnfOXF-5gnXRXG/edit#slide=id.p1" target="_blank">User Manual</a></li><li><a href="https://drive.google.com/file/d/1X7xGaE1umvzLI2BNqEE2LpJPkr2vpKHv/view" target="_blank">Work Flow</a></li><li><a href="https://docs.google.com/document/d/1-qp-qt2BWje2nBvibKgBgvYSX93eB0qz/edit">BH Offline Manual</a></li></ul></div>
             <div class="card" id="Form-1-to-5"><h3><i class="bi bi-journal-text"></i> <span data-en="Form 1 to 5" data-kn="ಫಾರಂ 1 ರಿಂದ 5">Form 1 to 5</span></h3><ul><li><a href="https://rdservices.karnataka.gov.in/service73" target="_blank">Shirestedar</a></li><li><a href="https://rdservices.karnataka.gov.in/service72" target="_blank">VAO</a></li><li><a href="https://rdservices.karnataka.gov.in/service75" target="_blank">RI</a></li><li><a href="https://rdservices.karnataka.gov.in/service76" target="_blank">Tahsildar</a></li><li><a href="https://rdservices.karnataka.gov.in/service79" target="_blank">ADLR</a></li><li><a href="https://drive.google.com/file/d/1mVmhPfuAi2C-h2sxIjC7gjs-2zNjq8eS/view" target="_blank">User Manual</a></li><li><a href="https://drive.google.com/file/d/1DSkH85TNgINg4zDQsdmd8WbRQyoGlag-/view" target="_blank">Work Flow</a></li><li><a href="https://drive.google.com/file/d/1Pihc2p3_1M5I6i0LADe1j8SWp6KzTYyw/view" target="_blank">DFO & Tahsildar</a></li><li><a href="https://rdservices.karnataka.gov.in/service77" target="_blank">AC</a></li><li><a href="https://rdservices.karnataka.gov.in/service78" target="_blank">DDLR</a></li><li><a href="https://rdservices.karnataka.gov.in/service95" target="_blank">DC</a></li></ul></div>
             <div class="card" id="Reports"><h3><i class="bi bi-clipboard-data"></i> <span data-en="Reports" data-kn="ವರದಿಗಳು">Reports</span></h3><ul>
-                <li><a href="https://rdservices.karnataka.gov.in/service81" target="_blank">1 to 5 Report</a></li>
-                <li><a href="https://rdservices.karnataka.gov.in/Service51/" target="_blank">Bagair Hukum</a></li>
-                <li><a href="https://rdservices.karnataka.gov.in/service63" target="_blank">Aadhar Seeding</a></li>
-                <li><a href="https://rdservices.karnataka.gov.in/AadharReport_test/AadharSeeding/EPautiBifercationReport">Pouthi Report</a>
-                </li><li><a href="https://rdservices.karnataka.gov.in/service55" target="_blank">Land Beat</a></li>
-                <li><a href="https://rdservices.karnataka.gov.in/Service68" target="_blank">Hakku Patra</a></li>
-                <li><a href="https://drive.google.com/drive/folders/14TNdy0LzMdIcsx5sjEWiYcDEaXvIO_ry?usp=sharing">Hakku Patra Manual</a></li>
-                <li><a href="https://landrecords.karnataka.gov.in/service147/bhoomipendency/" target="_blank">Bhoomi Pendancy</a></li>
-                <li><a href="https://landrecords.karnataka.gov.in/service110" target="_blank">MIS RTC, 3 & 9, Pyki Mismatch</a></li>
-                <li><a href="https://rdservices.karnataka.gov.in/bhoomigis/" target="_blank">Bhoomi GIS</a></li>
-                <li><a href="https://landrecords.karnataka.gov.in/service154/" target="_blank">RTC and Mutation Extract</a></li>
-                <li><a href="https://rdreports.karnataka.gov.in/" target="_blank">Revenue Dashboard</a></li>
-                <li><a href="https://rdservices.karnataka.gov.in/BhoomiMaps/" target="_blank">Bhoomi Maps</a></li>
-                <li><a href="https://rdservices.karnataka.gov.in/echawadi/" target="_blank">E-Chavadi</a></li></ul></div>
-                        <div class="card" id="Aadhar-Seeding-RTC"><h3><i class="bi bi-qr-code-scan"></i> <span data-en="Aadhar/E-Pouthi" data-kn="ಆಧಾರ/ಇ-ಪೌತಿ">Aadhar/E-Pouthi</span></h3><ul><li><a href="https://rdservices.karnataka.gov.in/service62" target="_blank">VAO Login</a></li><li><a href="https://rdservices.karnataka.gov.in/service124" target="_blank">E-Pouhti RI and SHR Login</a></li><li><a href="https://rdservices.karnataka.gov.in/service82" target="_blank">Status</a></li><li><a href="https://rdservices.karnataka.gov.in/service63" target="_blank">Reports</a></li><li><a href="https://drive.google.com/file/d/1KTZne5fnaX9SsUvRpChqW7EBJjaKdrEm/view" target="_blank">User Manual</a></li><li><a href="https://rdservices.karnataka.gov.in/Service63/AadharSeeding/EPautiKhataProgressReport" target="_blank">E-Pouthi Reports</a></li><li><a href="https://drive.google.com/file/d/12I5-u-BUX-c-K9YJudGaF86XMimTFfl_/view" target="_blank">RTC Verification Manual</a></li><li><a href="https://drive.google.com/file/d/1MWWPpKqGntN0jjGOkxRqC9MuFcm31Vpi/view" target="_blank">E Pouthi VAO User Manual</a></li><li><a href="https://drive.google.com/file/d/1SZrmBv4P9c7S3U5Jp7g4Jj4EDMTp3HDL/view" target="_blank">E Pouthi RI and SHR User Manual</a></li><li><a href="https://drive.google.com/drive/folders/1RvgzvEY8zcpDvo2b4dARxdZXyk3m4F2O?usp=sharing" target="_blank">Pouthi Circular Manual</a></li></ul></div>
+                    <li><a href="https://rdservices.karnataka.gov.in/service81" target="_blank">1 to 5 Report</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/Service51/" target="_blank">Bagair Hukum</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/service63" target="_blank">Aadhar Seeding</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/AadharReport_test/AadharSeeding/EPautiBifercationReport">Pouthi Report</a>
+                    </li><li><a href="https://rdservices.karnataka.gov.in/service55" target="_blank">Land Beat</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/Service68" target="_blank">Hakku Patra</a></li>
+                    <li><a href="https://drive.google.com/drive/folders/14TNdy0LzMdIcsx5sjEWiYcDEaXvIO_ry?usp=sharing">Hakku Patra Manual</a></li>
+                    <li><a href="https://landrecords.karnataka.gov.in/service147/bhoomipendency/" target="_blank">Bhoomi Pendancy</a></li>
+                    <li><a href="https://landrecords.karnataka.gov.in/service110" target="_blank">MIS RTC, 3 & 9, Pyki Mismatch</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/bhoomigis/" target="_blank">Bhoomi GIS</a></li>
+                    <li><a href="https://landrecords.karnataka.gov.in/service154/" target="_blank">RTC and Mutation Extract</a></li>
+                    <li><a href="https://rdreports.karnataka.gov.in/" target="_blank">Revenue Dashboard</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/BhoomiMaps/" target="_blank">Bhoomi Maps</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/echawadi/" target="_blank">E-Chavadi</a></li></ul></div>
+            <div class="card" id="Aadhar-Seeding-RTC"><h3><i class="bi bi-qr-code-scan"></i> <span data-en="Aadhar/E-Pouthi" data-kn="ಆಧಾರ/ಇ-ಪೌತಿ">Aadhar/E-Pouthi</span></h3><ul><li><a href="https://rdservices.karnataka.gov.in/service62" target="_blank">VAO Login</a></li><li><a href="https://rdservices.karnataka.gov.in/service124" target="_blank">E-Pouhti RI and SHR Login</a></li><li><a href="https://rdservices.karnataka.gov.in/service82" target="_blank">Status</a></li><li><a href="https://rdservices.karnataka.gov.in/service63" target="_blank">Reports</a></li><li><a href="https://drive.google.com/file/d/1KTZne5fnaX9SsUvRpChqW7EBJjaKdrEm/view" target="_blank">User Manual</a></li><li><a href="https://rdservices.karnataka.gov.in/Service63/AadharSeeding/EPautiKhataProgressReport" target="_blank">E-Pouthi Reports</a></li><li><a href="https://drive.google.com/file/d/12I5-u-BUX-c-K9YJudGaF86XMimTFfl_/view" target="_blank">RTC Verification Manual</a></li><li><a href="https://drive.google.com/file/d/1MWWPpKqGntN0jjGOkxRqC9MuFcm31Vpi/view" target="_blank">E Pouthi VAO User Manual</a></li><li><a href="https://drive.google.com/file/d/1SZrmBv4P9c7S3U5Jp7g4Jj4EDMTp3HDL/view" target="_blank">E Pouthi RI and SHR User Manual</a></li><li><a href="https://drive.google.com/drive/folders/1RvgzvEY8zcpDvo2b4dARxdZXyk3m4F2O?usp=sharing" target="_blank">Pouthi Circular Manual</a></li></ul></div>
             <div class="card" id="RCCMS"><h3><i class="bi bi-collection"></i> <span data-en="RCCMS" data-kn="ಆರ್.ಸಿ.ಸಿ.ಎಂ.ಎಸ್">RCCMS</span></h3><ul><li><a href="https://rccms.karnataka.gov.in/rccms/" target="_blank">Home</a></li><li><a href="https://rccms.karnataka.gov.in/RCCMS/rccmsreports/searchcase.aspx" target="_blank">Status</a></li><li><a href="https://drive.google.com/file/d/1UWhpQjtJO4Q5TFKAJO1R7LefQE3QDKwL/view" target="_blank">User Manual</a></li><li><a href="https://drive.google.com/file/d/1wI1G3GACukFrGSWNWbLsHjhRCd2Nu7hP/view" target="_blank">Order Typing</a></li><li><a href="https://drive.google.com/file/d/1oR_ns2Qc7T3yAOcjDtgTPjjsU60hCiMh/view" target="_blank">RCCMS Manual</a></li></ul></div>
             <div class="card" id="Land-Availability"><h3><i class="bi bi-signpost-split"></i> <span data-en="Land Availability" data-kn="ಭೂ ಲಭ್ಯತೆ">Land Availability</span></h3><ul><li><a href="https://rdservices.karnataka.gov.in/landavailability_tccw" target="_blank">Data Entry TCCW</a></li><li><a href="https://rdservices.karnataka.gov.in/landavailability_tah" target="_blank">Approval Tahsildar</a></li><li><a href="https://drive.google.com/file/d/1TCFBgoJn_mpdGkfGIRmjWU2m3TKYZi9T/view" target="_blank">User Manual</a></li></ul></div>
             <div class="card" id="Plantation-on-Lease"><h3><i class="bi bi-tree"></i> <span data-en="Plantation" data-kn="ತೋಟಗಾರಿಕೆ">Plantation</span></h3><ul><li><a href="https://landrecords.karnataka.gov.in/Service158/plantationlease/" target="_blank">Data Entry TCCW</a></li><li><a href="https://drive.google.com/file/d/1nfwMclx1XHe2c5jHrxQF1VUTaxQgfUO9/view" target="_blank">User Manual</a></li></ul></div>
             <div class="card" id="Softwares">
-  <h3><i class="bi bi-android2"></i> <span data-en="Mobile Apps" data-kn="Softwares">Softwares</span></h3>
-  <ul>
-    <li><a href="https://drive.google.com/drive/u/0/folders/1E2Pw54inV99bT8O61aC7juv-VIRTVkYT">Download Apps</a></li>
-    <li><a href="https://drive.google.com/drive/folders/1-yhCeJwn4m39LUWT31U01LOga1ZlMzyu?usp=sharing">Bhoomi Reports Datewise</a></li>
-    <li><a href="https://drive.google.com/drive/folders/1PmhB0_SivrMet8-KJ_15YNhySjXmmCFe?usp=drive_link">Bhoomi Ajsk Softwares</a></li>
-    <li><a href="https://www.bhoomi.karnataka.gov.in/bhoomidcweb/Home" target="_blank">DC Govt Land Approval</a></li>
-        <li><a href="https://rdapi.karnataka.gov.in/ams/Auth/Login " target="_blank">Asset Managment</a></li>
-      <li><a href="https://bhoomojini.karnataka.gov.in/service72 " target="_blank">Akarband Correction Report</a></li>
-  
-  </ul>
-</div>
+                <h3><i class="bi bi-android2"></i> <span data-en="Mobile Apps" data-kn="Softwares">Softwares</span></h3>
+                <ul>
+                    <li><a href="https://drive.google.com/drive/u/0/folders/1E2Pw54inV99bT8O61aC7juv-VIRTVkYT">Download Apps</a></li>
+                    <li><a href="https://drive.google.com/drive/folders/1-yhCeJwn4m39LUWT31U01LOga1ZlMzyu?usp=sharing">Bhoomi Reports Datewise</a></li>
+                    <li><a href="https://drive.google.com/drive/folders/1PmhB0_SivrMet8-KJ_15YNhySjXmmCFe?usp=drive_link">Bhoomi Ajsk Softwares</a></li>
+                    <li><a href="https://www.bhoomi.karnataka.gov.in/bhoomidcweb/Home" target="_blank">DC Govt Land Approval</a></li>
+                    <li><a href="https://rdapi.karnataka.gov.in/ams/Auth/Login " target="_blank">Asset Managment</a></li>
+                    <li><a href="https://bhoomojini.karnataka.gov.in/service72 " target="_blank">Akarband Correction Report</a></li>
+
+                </ul>
+            </div>
             <div class="card" id="RRT-CORRECTION"><h3><i class="bi bi-hdd-stack"></i> <span data-en="RRT CORRECTION" data-kn="ಆರ್.ಟಿ.ಸಿ ನಿರ್ವಹಣೆ">RRT CORRECTION</span></h3><ul>
-                <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_TCCW/" target="_blank">TCCW</a></li>
-                <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_VAO/" target="_blank">VAO</a></li>
-                <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_RI/" target="_blank">RI</a></li>
-                <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_SHR/" target="_blank">Shirestedar</a></li>
-                <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_TAH/" target="_blank">Tahsildar</a></li>
-                <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_ADLR/" target="_blank">ADLR</a></li>
-                <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_ACCW/">ACCW Case Worker</a></li>
-                <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_AC/">AC Login</a></li>
-                 <li><a href="https://rdservices.karnataka.gov.in/service109/RRTcmreports/">RRT Status</a></li>
-                <li><a href="https://drive.google.com/file/d/1AFls5Jz7l0GXfBNPfXIFy51y-_rkRSQP/view?usp=sharing" target="_blank">RRT Manual</a></li></ul></div>
-            
+                    <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_TCCW/" target="_blank">TCCW</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_VAO/" target="_blank">VAO</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_RI/" target="_blank">RI</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_SHR/" target="_blank">Shirestedar</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_TAH/" target="_blank">Tahsildar</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_ADLR/" target="_blank">ADLR</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_ACCW/">ACCW Case Worker</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/service109/RRT_AC/">AC Login</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/service109/RRTcmreports/">RRT Status</a></li>
+                    <li><a href="https://drive.google.com/file/d/1AFls5Jz7l0GXfBNPfXIFy51y-_rkRSQP/view?usp=sharing" target="_blank">RRT Manual</a></li></ul></div>
+
         </div>
     </main>
 
@@ -473,11 +1066,66 @@
     </footer>
 
     <script>
+        // ========== PASSWORD VERIFICATION LOGIC ==========
+        const CORRECT_PASSWORD = "bidaradmin"; // Change your password here
+
+        function checkSitePassword() {
+            const inputPass = document.getElementById("sitePasswordInput").value;
+            const errorMsg = document.getElementById("passwordError");
+            const overlay = document.getElementById("passwordOverlay");
+
+            if (inputPass === CORRECT_PASSWORD) {
+                overlay.style.display = "none";
+                document.body.style.overflow = "auto"; // Re-enable scrolling
+                // Focus on the search input after login
+                setTimeout(function() {
+                    const searchInput = document.getElementById("siteSearch");
+                    if (searchInput) searchInput.focus();
+                }, 300);
+            } else {
+                errorMsg.style.display = "block";
+                document.getElementById("sitePasswordInput").value = "";
+                document.getElementById("sitePasswordInput").focus();
+                // Shake animation
+                const box = document.querySelector('.password-box');
+                box.style.animation = 'none';
+                setTimeout(() => {
+                    box.style.animation = 'shake 0.4s ease';
+                }, 10);
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                checkSitePassword();
+            }
+        }
+
+        // Add shake animation dynamically
+        const styleSheet = document.createElement("style");
+        styleSheet.textContent = `
+                    @keyframes shake {
+                        0%, 100% { transform: translateX(0); }
+                        20% { transform: translateX(-12px); }
+                        40% { transform: translateX(12px); }
+                        60% { transform: translateX(-8px); }
+                        80% { transform: translateX(8px); }
+                    }
+                `;
+        document.head.appendChild(styleSheet);
+
+        // Lock scrolling until authenticated
+        document.addEventListener("DOMContentLoaded", function() {
+            document.body.style.overflow = "hidden";
+            // Focus on password input
+            document.getElementById("sitePasswordInput").focus();
+        });
+
         // ========== ADVANCED SECURITY: Prevent right-click, view-source, devtools ==========
         document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
         document.addEventListener('keydown', function(e) {
             // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U, Ctrl+S
-            if (e.key === 'F12' || 
+            if (e.key === 'F12' ||
                 (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
                 (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S'))) {
                 e.preventDefault();
@@ -486,9 +1134,10 @@
         });
         // Disable text selection on body (already in CSS, but reinforce)
         document.body.style.webkitTouchCallout = 'none';
-        
+
         // ========== LANGUAGE TOGGLE (full original functionality) ==========
         let isKannada = false;
+
         function toggleLanguage() {
             isKannada = !isKannada;
             const body = document.getElementById('mainBody');
@@ -505,52 +1154,101 @@
                 localStorage.setItem('preferredLang', 'en');
             }
         }
+
         function updateText(lang) {
             const elements = document.querySelectorAll('[data-en]');
             elements.forEach(el => {
                 if (el.tagName === 'INPUT') el.placeholder = el.getAttribute(`data-${lang}`);
-                else if (el.tagName === 'A' && el.querySelector('span')) { /* preserve inner for spans */ }
-                else el.innerText = el.getAttribute(`data-${lang}`);
+                else if (el.tagName === 'A' && el.querySelector('span')) { /* preserve inner for spans */ } else el
+                    .innerText = el.getAttribute(`data-${lang}`);
                 // Re-apply inner HTML for announcement links if needed
             });
         }
-        
+
         // ========== HERO SLIDER ==========
-        let cur = 0; const slides = document.querySelectorAll('.hero-slide');
-        function rotate() { slides[cur].classList.remove('active'); cur = (cur + 1) % slides.length; slides[cur].classList.add('active'); }
+        let cur = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+
+        function rotate() { slides[cur].classList.remove('active');
+            cur = (cur + 1) % slides.length;
+            slides[cur].classList.add('active'); }
         setInterval(rotate, 5000);
-        
+
         // ========== ANNOUNCEMENT ==========
         const announcements = {
-            en: ['Parihara payment disbursement is processed. <a href="https://bhoomibidar.github.io/parihara/" style="color: var(--brand-magenta); text-decoration: underline;" data-en="Verify Farmer ID here" data-kn="ರೈತರ ಐಡಿಯನ್ನು ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ">Verify Farmer ID here</a>','Record Room reports are now available online.','RTC verification manual updated in Aadhar section.','Bagair Hukum applications can now be tracked online.','Mobile apps for field survey available for download.'],
-            kn: ['ಪರಿಹಾರ ಪಾವತಿ ಹಂಚಿಕೆ ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಲಾಗಿದೆ. <a href="https://bhoomibidar.github.io/parihara/" style="color: var(--brand-magenta); text-decoration: underline;" data-en="Verify Farmer ID here" data-kn="ರೈತರ ಐಡಿಯನ್ನು ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ">ರೈತರ ಐಡಿಯನ್ನು ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ</a>','ರೆಕಾರ್ಡ್ ಕೊಠಡಿ ವರದಿಗಳು ಈಗ ಆನ್ಲೈನ್‌ನಲ್ಲಿ ಲಭ್ಯವಿದೆ.','ಆಧಾರ ವಿಭಾಗದಲ್ಲಿ ಆರ್.ಟಿ.ಸಿ ಪರಿಶೀಲನೆ ಮಾರ್ಗದರ್ಶಿ ನವೀಕರಿಸಲಾಗಿದೆ.','ಬಗೈರ್ ಹುಕುಂ ಅರ್ಜಿಗಳನ್ನು ಈಗ ಆನ್ಲೈನ್‌ನಲ್ಲಿ ಟ್ರ್ಯಾಕ್ ಮಾಡಬಹುದು.','ಕ್ಷೇತ್ರ ಸರ್ವೇಕ್ಷಣೆಗಾಗಿ ಮೊಬೈಲ್ ಅಪ್ಲಿಕೇಶನ್‌ಗಳು ಡೌನ್‌ಲೋಡ್‌ಗೆ ಲಭ್ಯವಿದೆ.']
+            en: ['Parihara payment disbursement is processed. <a href="https://bhoomibidar.github.io/parihara/" style="color: var(--brand-magenta); text-decoration: underline;" data-en="Verify Farmer ID here" data-kn="ರೈತರ ಐಡಿಯನ್ನು ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ">Verify Farmer ID here</a>',
+                'Record Room reports are now available online.',
+                'RTC verification manual updated in Aadhar section.',
+                'Bagair Hukum applications can now be tracked online.',
+                'Mobile apps for field survey available for download.'
+            ],
+            kn: ['ಪರಿಹಾರ ಪಾವತಿ ಹಂಚಿಕೆ ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಲಾಗಿದೆ. <a href="https://bhoomibidar.github.io/parihara/" style="color: var(--brand-magenta); text-decoration: underline;" data-en="Verify Farmer ID here" data-kn="ರೈತರ ಐಡಿಯನ್ನು ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ">ರೈತರ ಐಡಿಯನ್ನು ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ</a>',
+                'ರೆಕಾರ್ಡ್ ಕೊಠಡಿ ವರದಿಗಳು ಈಗ ಆನ್ಲೈನ್‌ನಲ್ಲಿ ಲಭ್ಯವಿದೆ.',
+                'ಆಧಾರ ವಿಭಾಗದಲ್ಲಿ ಆರ್.ಟಿ.ಸಿ ಪರಿಶೀಲನೆ ಮಾರ್ಗದರ್ಶಿ ನವೀಕರಿಸಲಾಗಿದೆ.',
+                'ಬಗೈರ್ ಹುಕುಂ ಅರ್ಜಿಗಳನ್ನು ಈಗ ಆನ್ಲೈನ್‌ನಲ್ಲಿ ಟ್ರ್ಯಾಕ್ ಮಾಡಬಹುದು.',
+                'ಕ್ಷೇತ್ರ ಸರ್ವೇಕ್ಷಣೆಗಾಗಿ ಮೊಬೈಲ್ ಅಪ್ಲಿಕೇಶನ್‌ಗಳು ಡೌನ್‌ಲೋಡ್‌ಗೆ ಲಭ್ಯವಿದೆ.'
+            ]
         };
         let aIdx = 0;
-        function nextAnn() { const lang = isKannada ? 'kn' : 'en'; aIdx = (aIdx + 1) % announcements[lang].length; document.getElementById('annText').innerHTML = announcements[lang][aIdx]; updateText(isKannada ? 'kn' : 'en'); }
-        function prevAnn() { const lang = isKannada ? 'kn' : 'en'; aIdx = (aIdx - 1 + announcements[lang].length) % announcements[lang].length; document.getElementById('annText').innerHTML = announcements[lang][aIdx]; updateText(isKannada ? 'kn' : 'en'); }
-        function filterServices() { let input = document.getElementById('siteSearch').value.toLowerCase(); document.querySelectorAll('.card').forEach(card => { card.style.display = card.innerText.toLowerCase().includes(input) ? "block" : "none"; }); }
-        function scrollToCard(id) { const el = document.getElementById(id); if(el) window.scrollTo({ top: el.offsetTop - 120, behavior: 'smooth' }); }
+
+        function nextAnn() { const lang = isKannada ? 'kn' : 'en';
+            aIdx = (aIdx + 1) % announcements[lang].length;
+            document.getElementById('annText').innerHTML = announcements[lang][aIdx];
+            updateText(isKannada ? 'kn' : 'en'); }
+
+        function prevAnn() { const lang = isKannada ? 'kn' : 'en';
+            aIdx = (aIdx - 1 + announcements[lang].length) % announcements[lang].length;
+            document.getElementById('annText').innerHTML = announcements[lang][aIdx];
+            updateText(isKannada ? 'kn' : 'en'); }
+
+        function filterServices() { let input = document.getElementById('siteSearch').value.toLowerCase();
+            document.querySelectorAll('.card').forEach(card => { card.style.display = card.innerText.toLowerCase().includes(
+                    input) ? "block" : "none"; }); }
+
+        function scrollToCard(id) { const el = document.getElementById(id); if (el) window.scrollTo({ top: el.offsetTop -
+                    120, behavior: 'smooth' }); }
         const goTopBtn = document.getElementById("goTopBtn");
-        window.onscroll = () => { goTopBtn.style.display = (document.documentElement.scrollTop > 300) ? "block" : "none"; };
+        window.onscroll = () => { goTopBtn.style.display = (document.documentElement.scrollTop > 300) ? "block" :
+            "none"; };
         goTopBtn.onclick = () => { window.scrollTo({ top: 0, behavior: "smooth" }); };
-        function updateVisitorCount() { if (typeof(Storage) !== "undefined") { let visits = localStorage.getItem("bidarVisitorCount"); visits = visits ? parseInt(visits) + 1 : 1; localStorage.setItem("bidarVisitorCount", visits); document.getElementById("visitNumber").textContent = visits.toLocaleString(); } else { document.getElementById("visitNumber").textContent = "N/A"; } }
-        
+
+        function updateVisitorCount() { if (typeof(Storage) !== "undefined") { let visits = localStorage.getItem(
+                "bidarVisitorCount");
+                visits = visits ? parseInt(visits) + 1 : 1;
+                localStorage.setItem("bidarVisitorCount", visits);
+                document.getElementById("visitNumber").textContent = visits.toLocaleString(); } else { document
+                    .getElementById("visitNumber").textContent = "N/A"; } }
+
         document.addEventListener('DOMContentLoaded', function() {
             updateVisitorCount();
             const savedLang = localStorage.getItem('preferredLang');
-            if (savedLang === 'kn') { isKannada = true; document.getElementById('mainBody').classList.add('kannada'); document.getElementById('langLabel').innerText = "ಕನ್ನಡ"; document.querySelector('.toggle-knob').style.left = "27px"; updateText('kn'); } else { updateText('en'); }
+            if (savedLang === 'kn') { isKannada = true;
+                document.getElementById('mainBody').classList.add('kannada');
+                document.getElementById('langLabel').innerText = "ಕನ್ನಡ";
+                document.querySelector('.toggle-knob').style.left = "27px";
+                updateText('kn'); } else { updateText('en'); }
             const lang = isKannada ? 'kn' : 'en';
             document.getElementById('annText').innerHTML = announcements[lang][aIdx];
             updateText(lang);
         });
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => { anchor.addEventListener('click', function (e) { e.preventDefault(); const targetId = this.getAttribute('href'); if(targetId !== '#') { const targetElement = document.querySelector(targetId); if(targetElement) window.scrollTo({ top: targetElement.offsetTop - 100, behavior: 'smooth' }); } }); });
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => { anchor.addEventListener('click', function(e) { e
+                    .preventDefault();
+                const targetId = this.getAttribute('href'); if (targetId !== '#') { const targetElement = document
+                        .querySelector(targetId); if (targetElement) window.scrollTo({ top: targetElement
+                            .offsetTop - 100, behavior: 'smooth' }); } }); });
         const currentPage = window.location.pathname.split("/").pop();
-        document.querySelectorAll('.nav-menu a').forEach(link => { if(link.getAttribute('href') === currentPage || (currentPage === '' && link.getAttribute('href') === 'index.html')) { link.style.backgroundColor = 'rgba(255,255,255,0.2)'; link.style.color = 'var(--brand-gold)'; } });
-        document.querySelectorAll('.card').forEach(card => { card.addEventListener('mouseenter', function() { this.style.borderTopColor = 'var(--brand-magenta-light)'; }); card.addEventListener('mouseleave', function() { this.style.borderTopColor = 'var(--brand-magenta)'; }); });
-        
+        document.querySelectorAll('.nav-menu a').forEach(link => { if (link.getAttribute('href') === currentPage || (
+                currentPage === '' && link.getAttribute('href') === 'index.html')) { link.style
+                .backgroundColor = 'rgba(255,255,255,0.2)';
+                link.style.color = 'var(--brand-gold)'; } });
+        document.querySelectorAll('.card').forEach(card => { card.addEventListener('mouseenter', function() { this
+                    .style.borderTopColor = 'var(--brand-magenta-light)'; });
+            card.addEventListener('mouseleave', function() { this.style.borderTopColor = 'var(--brand-magenta)'; }); });
+
         // Additional security: Disable console logging for production (optional)
-        if (typeof window.console !== "undefined") { window.console.log = function() {}; window.console.warn = function() {}; window.console.error = function() {}; }
+        if (typeof window.console !== "undefined") { window.console.log = function() {};
+            window.console.warn = function() {};
+            window.console.error = function() {}; }
     </script>
 </body>
 </html>
-```
