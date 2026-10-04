@@ -77,33 +77,33 @@
             list-style: none;
         }
 
-        /* ========== PASSWORD MODAL OVERLAY (NEW SPLIT DESIGN) ========== */
+        /* ========== PASSWORD MODAL OVERLAY (PROFESSIONAL TABBED DESIGN) ========== */
         #passwordOverlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(15, 23, 42, 0.95);
+            background-color: rgba(15, 23, 42, 0.97);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 99999;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
             overflow-y: auto;
             padding: 20px;
         }
 
         .login-container {
             display: flex;
-            max-width: 1100px;
+            max-width: 1200px;
             width: 100%;
             background: #ffffff;
             border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6);
             overflow: hidden;
             animation: fadeInUp 0.5s ease;
-            min-height: 600px;
+            min-height: 650px;
         }
 
         @keyframes fadeInUp {
@@ -111,85 +111,180 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Left Side: Info Panel */
+        /* Left Side: Information Panel with Tabs */
         .login-info-panel {
-            flex: 1.2;
-            background: linear-gradient(135deg, #4a002a 0%, #7b0046 50%, #a0165d 100%);
+            flex: 1.3;
+            background: linear-gradient(135deg, #4a002a 0%, #7b0046 60%, #a0165d 100%);
             color: #fff;
-            padding: 40px;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
-            max-height: 80vh;
-        }
-
-        .login-info-panel::-webkit-scrollbar {
-            width: 6px;
-        }
-        .login-info-panel::-webkit-scrollbar-thumb {
-            background: rgba(255, 213, 74, 0.4);
-            border-radius: 3px;
+            overflow: hidden;
         }
 
         .info-header {
             text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 213, 74, 0.3);
+            padding: 30px 30px 20px;
+            border-bottom: 1px solid rgba(255, 213, 74, 0.25);
         }
 
         .info-header .login-logo {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             object-fit: contain;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
-            padding: 5px;
+            padding: 6px;
             border: 2px solid var(--brand-gold);
         }
 
         .info-header h2 {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             color: var(--brand-gold);
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             margin-bottom: 4px;
             text-transform: uppercase;
+            font-weight: 800;
         }
 
         .info-header h3 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: #fff;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .info-header p {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: #cbd5e1;
             line-height: 1.4;
         }
 
-        .officer-list {
+        /* Tab Navigation */
+        .info-tabs {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 213, 74, 0.2);
+        }
+
+        .info-tab {
+            flex: 1;
+            padding: 14px 10px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            letter-spacing: 0.3px;
+        }
+
+        .info-tab:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .info-tab.active {
+            color: var(--brand-gold);
+            border-bottom-color: var(--brand-gold);
+            background: rgba(255, 213, 74, 0.08);
+        }
+
+        .info-tab i {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+
+        /* Tab Content Area */
+        .tab-content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px 30px;
+        }
+
+        .tab-content-wrapper::-webkit-scrollbar {
+            width: 5px;
+        }
+        .tab-content-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255, 213, 74, 0.4);
+            border-radius: 3px;
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fadeInTab 0.4s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-pane h4 {
+            font-size: 0.9rem;
+            color: var(--brand-gold);
+            margin-bottom: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-pane h4 i {
+            font-size: 1rem;
+        }
+
+        .tab-pane p {
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            line-height: 1.65;
+            margin-bottom: 12px;
+        }
+
+        .tab-pane ul {
+            padding-left: 0;
+            margin-bottom: 12px;
+        }
+
+        .tab-pane ul li {
+            font-size: 0.78rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+            padding: 4px 0 4px 20px;
+            position: relative;
+        }
+
+        .tab-pane ul li::before {
+            content: "\F285";
+            font-family: "bootstrap-icons";
+            position: absolute;
+            left: 0;
+            color: var(--brand-gold);
+            font-size: 0.65rem;
+            line-height: 1.9;
         }
 
         .officer-item {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.07);
             border-left: 3px solid var(--brand-gold);
             padding: 12px 15px;
             border-radius: 8px;
+            margin-bottom: 10px;
             transition: background 0.3s ease;
         }
 
         .officer-item:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.13);
         }
 
-        .officer-item h4 {
-            font-size: 0.85rem;
+        .officer-item h5 {
+            font-size: 0.82rem;
             font-weight: 700;
             color: #fff;
             display: flex;
@@ -198,26 +293,28 @@
             margin-bottom: 4px;
         }
 
-        .officer-item h4 i {
+        .officer-item h5 i {
             color: var(--brand-gold);
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
         .officer-item p {
-            font-size: 0.75rem;
+            font-size: 0.73rem;
             color: #cbd5e1;
-            line-height: 1.4;
+            line-height: 1.45;
             padding-left: 24px;
+            margin-bottom: 0;
         }
 
         /* Right Side: Login Form Panel */
         .login-form-panel {
-            flex: 0.8;
+            flex: 0.7;
             padding: 50px 40px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             background: #fff;
+            position: relative;
         }
 
         .login-form-panel .lock-icon {
@@ -237,7 +334,7 @@
         }
 
         .login-form-panel .sub-text {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: #64748b;
             margin-bottom: 25px;
             line-height: 1.5;
@@ -784,8 +881,8 @@
         .links-grid {
             display: grid;
             grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 22px;
-            align-items: stretch;
+            gap: 20px;
+            align-items: start;
         }
 
         .card {
@@ -797,8 +894,9 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            height: 100%;
+            height: auto;
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            min-height: 180px;
         }
         .card:hover {
             transform: translateY(-6px);
@@ -830,11 +928,11 @@
         .card h3 span { flex: 1; }
 
         .card ul {
-            padding: 12px 14px 16px;
+            padding: 10px 14px 14px;
             margin: 0;
-            flex: 1;
             display: flex;
             flex-direction: column;
+            gap: 4px;
         }
         .card ul li {
             margin: 0;
@@ -843,7 +941,7 @@
             align-items: flex-start;
             gap: 8px;
             line-height: 1.5;
-            padding: 5px 0;
+            padding: 4px 0;
             border-bottom: 1px dashed #eef2f7;
         }
         .card ul li:last-child { border-bottom: none; }
@@ -1077,17 +1175,19 @@
             /* Login Responsive */
             .login-container {
                 flex-direction: column;
-                max-height: 90vh;
+                max-height: 95vh;
                 overflow-y: auto;
             }
             .login-info-panel {
                 max-height: none;
-                padding: 25px;
                 order: 2;
             }
             .login-form-panel {
-                padding: 30px 25px;
+                padding: 35px 25px;
                 order: 1;
+            }
+            .tab-content-wrapper {
+                padding: 20px 25px;
             }
         }
         @media (max-width: 600px) {
@@ -1119,6 +1219,8 @@
             .emblem-badge .emblem { width: 76px; height: 76px; }
             .header-center h1 { font-size: 1.3rem; }
             .header-center h2 { font-size: 0.68rem; letter-spacing: 2px; }
+            .info-tabs { flex-direction: column; }
+            .info-tab { padding: 10px; }
         }
 
         /* Professional Marquee Styling */
@@ -1188,53 +1290,128 @@
 </head>
 <body id="mainBody">
 
-    <!-- ========== PASSWORD ACCESS MODAL (UPDATED WITH INFO) ========== -->
+    <!-- ========== PASSWORD ACCESS MODAL (PROFESSIONAL TABBED DESIGN) ========== -->
     <div id="passwordOverlay">
         <div class="login-container">
-            <!-- Left Side: Information Panel -->
+            <!-- Left Side: Information Panel with Tabs -->
             <div class="login-info-panel">
                 <div class="info-header">
                     <img src="assets/img/goklogo.png" alt="Government of Karnataka Emblem" class="login-logo">
                     <h2>Government of Karnataka</h2>
                     <h3>Revenue Department, Bidar</h3>
-                    <p>Administrative Hierarchy & Key Duties</p>
+                    <p>District Administration & Land Governance</p>
                 </div>
-                <div class="officer-list">
-                    <div class="officer-item">
-                        <h4><i class="bi bi-person-badge"></i> Deputy Commissioner</h4>
-                        <p>Head of the district administration. Overall in-charge of revenue, law & order, and development.</p>
+
+                <!-- Tab Navigation -->
+                <div class="info-tabs">
+                    <div class="info-tab active" onclick="switchTab(event, 'tab-district')">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        About District
                     </div>
-                    <div class="officer-item">
-                        <h4><i class="bi bi-person-badge-fill"></i> Additional Deputy Commissioner</h4>
-                        <p>Assists the DC in administrative duties, monitoring key revenue programs and schemes.</p>
+                    <div class="info-tab" onclick="switchTab(event, 'tab-department')">
+                        <i class="bi bi-building"></i>
+                        Department
                     </div>
-                    <div class="officer-item">
-                        <h4><i class="bi bi-person-vcard"></i> Assistant Commissioner </h4>
-                        <p>Oversees sub-divisional revenue matters, land acquisition, and coordination with taluk offices.</p>
+                    <div class="info-tab" onclick="switchTab(event, 'tab-officers')">
+                        <i class="bi bi-people-fill"></i>
+                        Officers
                     </div>
-                    <div class="officer-item">
-                        <h4><i class="bi bi-person-workspace"></i> Tahsildar</h4>
-                        <p>Taluk-level administrative head responsible for land records, mutations, and local revenue.</p>
+                </div>
+
+                <!-- Tab Content Area -->
+                <div class="tab-content-wrapper">
+
+                    <!-- Tab 1: About District -->
+                    <div id="tab-district" class="tab-pane active">
+                        <h4><i class="bi bi-info-circle-fill"></i> Bidar District Profile</h4>
+                        <p>Bidar is the northernmost district of Karnataka, known as the "Pulse Bowl of Karnataka." Located in the northeast of the state, it shares its borders with Maharashtra and Telangana. The district spans a geographical area of approximately 5,448 sq. km, with its administrative headquarters in Bidar City.</p>
+                        <p>The district is divided into <strong>2 revenue sub-divisions</strong> (Bidar and Basavakalyan) and comprises <strong>8 taluks</strong>, <strong>635 villages</strong>, and 5 Hoblis. Bidar is predominantly an agricultural district with a rich cultural heritage, famous for its Bidriware handicrafts.</p>
+                        <h4><i class="bi bi-diagram-3"></i> Administrative Setup</h4>
+                        <ul>
+                            <li><strong>Sub-Division 1 (Bidar):</strong> Bidar, Aurad, Kamalnagar</li>
+                            <li><strong>Sub-Division 2 (Basavakalyan):</strong> Basavakalyan, Hulsur, Humnabad, Chitaguppa, Bhalki</li>
+                            <li><strong>Total Taluks:</strong> 8</li>
+                            <li><strong>Total Villages:</strong> 635</li>
+                            <li><strong>Revenue Circles:</strong> Headed by Revenue Inspectors</li>
+                            <li><strong>Village Level:</strong> Village Accountants (VAOs)</li>
+                        </ul>
                     </div>
-                    <div class="officer-item">
-                        <h4><i class="bi bi-person-plus"></i> Consultants</h4>
-                        <p>Technical experts providing support for e-governance initiatives and special projects.</p>
+
+                    <!-- Tab 2: Department Information -->
+                    <div id="tab-department" class="tab-pane">
+                        <h4><i class="bi bi-building"></i> Revenue Department Overview</h4>
+                        <p>The Revenue Department is the backbone of district administration in Karnataka. It is responsible for land administration, maintenance of land records, assessment and collection of land revenue, and collection of other public dues. The department also handles law and order, disaster management, and implementation of various social welfare schemes at the district level.</p>
+                        <h4><i class="bi bi-list-check"></i> Key Functions & Responsibilities</h4>
+                        <ul>
+                            <li>Maintenance and updating of Record of Rights (RTC/Pahani)</li>
+                            <li>Registration of mutations and transfer of land ownership</li>
+                            <li>Land acquisition for public purposes</li>
+                            <li>Conversion of agricultural land to non-agricultural purposes</li>
+                            <li>Collection of land revenue and other government dues</li>
+                            <li>Grant of government land and regularization of unauthorized occupation</li>
+                            <li>Implementation of land reforms and tenancy laws</li>
+                            <li>Disaster management and relief operations</li>
+                            <li>Issuance of various certificates and licenses</li>
+                            <li>Conduct of elections and electoral roll management</li>
+                        </ul>
+                        <h4><i class="bi bi-laptop"></i> Digital Initiatives</h4>
+                        <ul>
+                            <li><strong>Bhoomi:</strong> Online land records management system</li>
+                            <li><strong>Mojini:</strong> Survey and land measurement portal</li>
+                            <li><strong>Kaveri:</strong> Online property registration system</li>
+                            <li><strong>E-Swathu:</strong> Digital property tax management</li>
+                            <li><strong>Bhu-Suraksha:</strong> Land records digitization project</li>
+                        </ul>
                     </div>
-                    <div class="officer-item">
-                        <h4><i class="bi bi-person-check"></i> Grade 2 Tahsildar</h4>
-                        <p>Supports the Tahsildar in daily operations, verification of documents, and field inspections.</p>
-                    </div>
-                    <div class="officer-item">
-                        <h4><i class="bi bi-person-gear"></i> Deputy Tahsildar</h4>
-                        <p>Assists the Tahsildar in field-level revenue administration and case management.</p>
-                    </div>
-                    <div class="officer-item">
-                        <h4><i class="bi bi-person-lines-fill"></i> Revenue Inspector (RI)</h4>
-                        <p>Responsible for field-level revenue administration, survey work, and reporting.</p>
-                    </div>
-                    <div class="officer-item">
-                        <h4><i class="bi bi-person"></i> Village Administrative Officer (VAO)</h4>
-                        <p>Village-level revenue official handling basic land records and local revenue collection.</p>
+
+                    <!-- Tab 3: Administrative Officers -->
+                    <div id="tab-officers" class="tab-pane">
+                        <h4><i class="bi bi-people-fill"></i> Administrative Hierarchy & Duties</h4>
+
+                        <div class="officer-item">
+                            <h5><i class="bi bi-person-badge"></i> Deputy Commissioner (DC)</h5>
+                            <p>Head of the district administration. Overall in-charge of revenue, law & order, and development. Exercises magisterial powers and acts as the chief coordinator for all government departments in the district.</p>
+                        </div>
+
+                        <div class="officer-item">
+                            <h5><i class="bi bi-person-badge-fill"></i> Additional Deputy Commissioner (ADC)</h5>
+                            <p>Assists the DC in administrative duties, monitoring key revenue programs and schemes. Handles specific portfolios as assigned by the DC and acts as the appellate authority for certain revenue matters.</p>
+                        </div>
+
+                        <div class="officer-item">
+                            <h5><i class="bi bi-person-vcard"></i> Assistant Commissioner (AC)</h5>
+                            <p>Oversees sub-divisional revenue matters, land acquisition, and coordination with taluk offices. Acts as Sub-Divisional Magistrate (SDM) and is the first appellate authority for revenue matters handled by subordinate officers. Also serves as Electoral Registration Officer and Returning Officer.</p>
+                        </div>
+
+                        <div class="officer-item">
+                            <h5><i class="bi bi-person-workspace"></i> Tahsildar</h5>
+                            <p>Taluk-level administrative head responsible for land records, mutations, and local revenue collection. Supervises Revenue Inspectors and Village Accountants. Also functions as Taluk Magistrate and handles law and order at the taluk level.</p>
+                        </div>
+
+                        <div class="officer-item">
+                            <h5><i class="bi bi-person-plus"></i> Consultants</h5>
+                            <p>Technical experts providing support for e-governance initiatives, data analysis, project management, and special revenue department projects. Assist in implementation of digital transformation programs.</p>
+                        </div>
+
+                        <div class="officer-item">
+                            <h5><i class="bi bi-person-check"></i> Grade 2 Tahsildar</h5>
+                            <p>Supports the Tahsildar in daily operations, verification of documents, and field inspections. Handles specific case files and assists in revenue collection and land record maintenance.</p>
+                        </div>
+
+                        <div class="officer-item">
+                            <h5><i class="bi bi-person-gear"></i> Deputy Tahsildar (DT)</h5>
+                            <p>Assists the Tahsildar in field-level revenue administration and case management. Responsible for conducting field inspections, verifying land records, and handling public grievances related to land matters.</p>
+                        </div>
+
+                        <div class="officer-item">
+                            <h5><i class="bi bi-person-lines-fill"></i> Revenue Inspector (RI)</h5>
+                            <p>Responsible for field-level revenue administration, survey work, and reporting to the Tahsildar. Each RI is in charge of a Revenue Circle comprising multiple villages. Maintains land records and collects land revenue at the circle level.</p>
+                        </div>
+
+                        <div class="officer-item">
+                            <h5><i class="bi bi-person"></i> Village Administrative Officer (VAO)</h5>
+                            <p>Village-level revenue official handling basic land records, local revenue collection, and issuance of various certificates. Acts as the primary point of contact for citizens at the village level for revenue-related matters.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1257,7 +1434,7 @@
         <div class="profile-side">
             <img src="assets/img/shilpa.jpg" alt="DC" class="gov-photo">
             <div>
-                <div class="profile-name" data-en="Smt. Shilpa Sharma, IAS" data-kn="ಶ್ರೀಮತಿ ಶಿಲ್ಪಾ ಶರ್ಮಾ, ಐ.ಎ.ಎಸ್">Smt. Shilpa Sharma, IAS</div>
+                <div class="profile-name" data-en="Shilpa Sharma, IAS" data-kn="ಶಿಲ್ಪಾ ಶರ್ಮಾ, ಐ.ಎ.ಎಸ್">Shilpa Sharma, IAS</div>
                 <div class="profile-desig" data-en="Deputy Commissioner, Bidar" data-kn="ಜಿಲ್ಲಾಧಿಕಾರಿಗಳು, ಬೀದರ್">Deputy Commissioner, Bidar</div>
             </div>
         </div>
@@ -1281,7 +1458,7 @@
         </div>
         <div class="profile-side right">
             <div>
-                <div class="profile-name" data-en="Smt. Surekha.V.K , KAS" data-kn="ಶ್ರೀಮತಿ ಸುರೇಖಾ ವಿ.ಕೆ, ಕೆ.ಎ.ಎಸ್">Smt. Surekha.V.K (KAS)</div>
+                <div class="profile-name" data-en="Surekha.V.K , KAS" data-kn="ಸುರೇಖಾ ವಿ.ಕೆ, ಕೆ.ಎ.ಎಸ್">Surekha.V.K (KAS)</div>
                 <div class="profile-desig" data-en="Addl. Deputy Commissioner" data-kn="ಅಪರ ಜಿಲ್ಲಾಧಿಕಾರಿಗಳು">Addl. Deputy Commissioner</div>
             </div>
             <img src="assets/img/surekha.jpg" alt="ADC" class="gov-photo">
@@ -1313,7 +1490,7 @@
                         <li><a href="javascript:void(0)" onclick="scrollToCard('Bhoomi')" data-en="Bhoomi" data-kn="ಭೂಮಿ">Bhoomi</a></li>
                     </ul>
                 </li>
-                <li class="has-dropdown"><button data-en="Other Applications" data-kn="ಇತರೆ ಅಪ್ಲಿಕೇಶನ್ಗಳು"><span class="nav-text">Other Applications</span> <i class="bi bi-caret-down-fill"></i></button>
+                <li class="has-dropdown"><button data-en="Other Applications" data-kn="ಇತರೆ ಅಪ್ಲಿಕೇಶನ್‌ಗಳು"><span class="nav-text">Other Applications</span> <i class="bi bi-caret-down-fill"></i></button>
                     <ul class="dropdown">
                         <li><a href="javascript:void(0)" onclick="scrollToCard('RCCMS')" data-en="RCCMS" data-kn="ಆರ್.ಸಿ.ಸಿ.ಎಂ.ಎಸ್">RCCMS</a></li>
                         <li><a href="javascript:void(0)" onclick="scrollToCard('Sub-Register')" data-en="Sub Register" data-kn="ಸಬ್ ರಿಜಿಸ್ಟರ್">Sub Register</a></li>
@@ -1328,7 +1505,7 @@
                         <li><a href="javascript:void(0)" onclick="scrollToCard('Ex-Servicemen')" data-en="Ex Servicemen" data-kn="ಮಾಜಿ ಸೇವಕರು">Ex Servicemen</a></li>
                         <li><a href="javascript:void(0)" onclick="scrollToCard('Land-Availability')" data-en="Land Availability" data-kn="ಭೂ ಲಭ್ಯತೆ">Land Availability</a></li>
                         <li><a href="javascript:void(0)" onclick="scrollToCard('Plantation-on-Lease')" data-en="Plantation on Lease" data-kn="ಕರಾರಿನ ಮೇಲೆ ತೋಟಗಾರಿಕೆ">Plantation on Lease</a></li>
-                        <li><a href="javascript:void(0)" onclick="scrollToCard('Softwares')" data-en="Softwares" data-kn="ಮೊಬೈಲ್ ಅಪ್ಲಿಕೇಶನ್ಗಳು">Softwares</a></li>
+                        <li><a href="javascript:void(0)" onclick="scrollToCard('Softwares')" data-en="Softwares" data-kn="ಮೊಬೈಲ್ ಅಪ್ಲಿಕೇಶನ್‌ಗಳು">Softwares</a></li>
                     </ul>
                 </li>
 
@@ -1352,7 +1529,7 @@
     <div class="announcement-container"><div class="announcement-box"><div class="ann-label"><i class="bi bi-megaphone-fill"></i> <span id="annLabelText">UPDATES</span></div><div class="ann-content" id="annText">Parihara payment disbursement is processed. <a href="https://bhoomibidar.github.io/parihara/" style="color: var(--brand-magenta); text-decoration: underline;" data-en="Verify Farmer ID here" data-kn="ರೈತರ ಐಡಿಯನ್ನು ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ">Verify Farmer ID here</a></div><div class="ann-controls"><button onclick="prevAnn()"><i class="bi bi-arrow-left-circle-fill"></i></button><button onclick="nextAnn()"><i class="bi bi-arrow-right-circle-fill"></i></button></div></div></div>
 
     <!-- HERO SECTION -->
-    <section class="hero-section"><div class="hero-slider" id="heroSlider"><div class="hero-slide active"><img src="assets/img/photo1.jpg"><div class="hero-caption"><h3 data-en="Bidar District Service" data-kn="ಬೀದರ್ ಜಿಲ್ಲಾ ಸೇವೆ">Bidar District Service</h3><p data-en="Land records and citizen services at your fingertips." data-kn="ಭೂ ದಾಖಲೆಗಳು ಮತ್ತು ನಾಗರಿಕ ಸೇವೆಗಳು ನಿಮ್ಮ ಬೆರಳ ತುದಿಯಲ್ಲಿ.">Land records and citizen services at your fingertips.</p></div></div><div class="hero-slide"><img src="assets/img/photo2.jpg"><div class="hero-caption"><h3 data-en="Field Surveys" data-kn="ಕ್ಷೇತ್ರ ಸರ್ವೇಕ್ಷಣೆಗಳು">Field Surveys</h3><p data-en="Online access to survey sketches and RRT reports." data-kn="ಸರ್ವೇ ಸ್ಕೆಚ್ಗಳು ಮತ್ತು ಆರ್.ಆರ್.ಟಿ ವರದಿಗಳಿಗೆ ಆನ್ಲೈನ್ ಪ್ರವೇಶ.">Online access to survey sketches and RRT reports.</p></div></div><div class="hero-slide"><img src="assets/img/photo3.jpg"><div class="hero-caption"><h3 data-en="Transparent Governance" data-kn="ಪಾರದರ್ಶಕ ಆಡಳಿತ">Transparent Governance</h3><p data-en="Digitizing land records for public accountability." data-kn="ಸಾರ್ವಜನಿಕ ಜವಾಬ್ದಾರಿಗಾಗಿ ಭೂ ದಾಖಲೆಗಳನ್ನು ಡಿಜಿಟಲ್ ರೂಪಕ್ಕೆ ಪರಿವರ್ತಿಸುವುದು.">Digitizing land records for public accountability.</p></div></div></div></section>
+    <section class="hero-section"><div class="hero-slider" id="heroSlider"><div class="hero-slide active"><img src="assets/img/photo1.jpg"><div class="hero-caption"><h3 data-en="Bidar District Service" data-kn="ಬೀದರ್ ಜಿಲ್ಲಾ ಸೇವೆ">Bidar District Service</h3><p data-en="Land records and citizen services at your fingertips." data-kn="ಭೂ ದಾಖಲೆಗಳು ಮತ್ತು ನಾಗರಿಕ ಸೇವೆಗಳು ನಿಮ್ಮ ಬೆರಳ ತುದಿಯಲ್ಲಿ.">Land records and citizen services at your fingertips.</p></div></div><div class="hero-slide"><img src="assets/img/photo2.jpg"><div class="hero-caption"><h3 data-en="Field Surveys" data-kn="ಕ್ಷೇತ್ರ ಸರ್ವೇಕ್ಷಣೆಗಳು">Field Surveys</h3><p data-en="Online access to survey sketches and RRT reports." data-kn="ಸರ್ವೇ ಸ್ಕೆಚ್‌ಗಳು ಮತ್ತು ಆರ್.ಆರ್.ಟಿ ವರದಿಗಳಿಗೆ ಆನ್‌ಲೈನ್ ಪ್ರವೇಶ.">Online access to survey sketches and RRT reports.</p></div></div><div class="hero-slide"><img src="assets/img/photo3.jpg"><div class="hero-caption"><h3 data-en="Transparent Governance" data-kn="ಪಾರದರ್ಶಕ ಆಡಳಿತ">Transparent Governance</h3><p data-en="Digitizing land records for public accountability." data-kn="ಸಾರ್ವಜನಿಕ ಜವಾಬ್ದಾರಿಗಾಗಿ ಭೂ ದಾಖಲೆಗಳನ್ನು ಡಿಜಿಟಲ್ ರೂಪಕ್ಕೆ ಪರಿವರ್ತಿಸುವುದು.">Digitizing land records for public accountability.</p></div></div></div></section>
 
     <!-- MAIN CONTENT CARDS -->
     <main class="main-content">
@@ -1446,7 +1623,7 @@
             </div>
 
             <div class="card" id="RTC-Online">
-                <h3><i class="bi bi-reception-4"></i> <span data-en="RTC Online" data-kn="ಆರ್.ಟಿ.ಸಿ ಆನ್ಲೈನ್">RTC Online</span></h3>
+                <h3><i class="bi bi-reception-4"></i> <span data-en="RTC Online" data-kn="ಆರ್.ಟಿ.ಸಿ ಆನ್‌ಲೈನ್">RTC Online</span></h3>
                 <ul>
                     <li><a href="https://landrecords.karnataka.gov.in/Service2/" target="_blank">RTC, MR, Mutation</a></li>
                     <li><a href="https://landrecords.karnataka.gov.in/service40/PendcySurveyNoWiseRpt" target="_blank">MR History</a></li>
@@ -1706,6 +1883,17 @@
     </footer>
 
     <script>
+        // ========== TAB SWITCHING LOGIC ==========
+        function switchTab(event, tabId) {
+            // Remove active class from all tabs and panes
+            document.querySelectorAll('.info-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+
+            // Add active class to clicked tab and corresponding pane
+            event.currentTarget.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
         // ========== PASSWORD VERIFICATION LOGIC ==========
         const CORRECT_PASSWORD = "bidaradmin"; // Change your password here
 
@@ -1820,9 +2008,9 @@
                 'Mobile apps for field survey available for download.'
             ],
             kn: ['ಪರಿಹಾರ ಪಾವತಿ ಹಂಚಿಕೆ ಪ್ರಕ್ರಿಯೆಗೊಳಿಸಲಾಗಿದೆ. <a href="https://bhoomibidar.github.io/parihara/" style="color: var(--brand-magenta); text-decoration: underline;" data-en="Verify Farmer ID here" data-kn="ರೈತರ ಐಡಿಯನ್ನು ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ">ರೈತರ ಐಡಿಯನ್ನು ಇಲ್ಲಿ ಪರಿಶೀಲಿಸಿ</a>',
-                'ರೆಕಾರ್ಡ್ ಕೊಠಡಿ ವರದಿಗಳು ಈಗ ಆನ್ಲೈನ್‌ನಲ್ಲಿ ಲಭ್ಯವಿದೆ.',
+                'ರೆಕಾರ್ಡ್ ಕೊಠಡಿ ವರದಿಗಳು ಈಗ ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ಲಭ್ಯವಿದೆ.',
                 'ಆಧಾರ ವಿಭಾಗದಲ್ಲಿ ಆರ್.ಟಿ.ಸಿ ಪರಿಶೀಲನೆ ಮಾರ್ಗದರ್ಶಿ ನವೀಕರಿಸಲಾಗಿದೆ.',
-                'ಬಗೈರ್ ಹುಕುಂ ಅರ್ಜಿಗಳನ್ನು ಈಗ ಆನ್ಲೈನ್‌ನಲ್ಲಿ ಟ್ರ್ಯಾಕ್ ಮಾಡಬಹುದು.',
+                'ಬಗೈರ್ ಹುಕುಂ ಅರ್ಜಿಗಳನ್ನು ಈಗ ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ಟ್ರ್ಯಾಕ್ ಮಾಡಬಹುದು.',
                 'ಕ್ಷೇತ್ರ ಸರ್ವೇಕ್ಷಣೆಗಾಗಿ ಮೊಬೈಲ್ ಅಪ್ಲಿಕೇಶನ್‌ಗಳು ಡೌನ್‌ಲೋಡ್‌ಗೆ ಲಭ್ಯವಿದೆ.'
             ]
         };
@@ -1903,4 +2091,3 @@
     </script>
 </body>
 </html>
-```
