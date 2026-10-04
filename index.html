@@ -27,12 +27,8 @@
             -ms-user-select: none;
             user-select: none;
             overflow: hidden;
-            /* Lock scrolling until password is entered */
         }
-        /* Allow selection only on input fields for usability */
-        input,
-        textarea,
-        [contenteditable="true"] {
+        input, textarea, [contenteditable="true"] {
             -webkit-user-select: text;
             -moz-user-select: text;
             -ms-user-select: text;
@@ -81,7 +77,7 @@
             list-style: none;
         }
 
-        /* ========== PASSWORD MODAL OVERLAY ========== */
+        /* ========== PASSWORD MODAL OVERLAY (NEW SPLIT DESIGN) ========== */
         #passwordOverlay {
             position: fixed;
             top: 0;
@@ -94,53 +90,161 @@
             align-items: center;
             z-index: 99999;
             backdrop-filter: blur(8px);
+            overflow-y: auto;
+            padding: 20px;
         }
 
-        .password-box {
+        .login-container {
+            display: flex;
+            max-width: 1100px;
+            width: 100%;
             background: #ffffff;
-            padding: 40px 35px;
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            text-align: center;
-            max-width: 420px;
-            width: 92%;
-            border-top: 6px solid var(--brand-magenta);
+            overflow: hidden;
             animation: fadeInUp 0.5s ease;
+            min-height: 600px;
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .password-box .lock-icon {
+        /* Left Side: Info Panel */
+        .login-info-panel {
+            flex: 1.2;
+            background: linear-gradient(135deg, #4a002a 0%, #7b0046 50%, #a0165d 100%);
+            color: #fff;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        .login-info-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+        .login-info-panel::-webkit-scrollbar-thumb {
+            background: rgba(255, 213, 74, 0.4);
+            border-radius: 3px;
+        }
+
+        .info-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 213, 74, 0.3);
+        }
+
+        .info-header .login-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px;
+            border: 2px solid var(--brand-gold);
+        }
+
+        .info-header h2 {
+            font-size: 1.2rem;
+            color: var(--brand-gold);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .info-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .info-header p {
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            line-height: 1.4;
+        }
+
+        .officer-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .officer-item {
+            background: rgba(255, 255, 255, 0.08);
+            border-left: 3px solid var(--brand-gold);
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .officer-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .officer-item h4 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .officer-item h4 i {
+            color: var(--brand-gold);
+            font-size: 1rem;
+        }
+
+        .officer-item p {
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            line-height: 1.4;
+            padding-left: 24px;
+        }
+
+        /* Right Side: Login Form Panel */
+        .login-form-panel {
+            flex: 0.8;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #fff;
+        }
+
+        .login-form-panel .lock-icon {
             font-size: 3.5rem;
             color: var(--brand-magenta);
             margin-bottom: 10px;
             display: block;
+            text-align: center;
         }
 
-        .password-box h3 {
+        .login-form-panel h3 {
             color: var(--brand-magenta);
             margin-bottom: 8px;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 800;
+            text-align: center;
         }
 
-        .password-box .sub-text {
+        .login-form-panel .sub-text {
             font-size: 0.85rem;
             color: #64748b;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             line-height: 1.5;
+            text-align: center;
         }
 
-        .password-box input[type="password"] {
+        .login-form-panel input[type="password"] {
             width: 100%;
             padding: 14px 18px;
             margin-bottom: 16px;
@@ -154,12 +258,12 @@
             letter-spacing: 2px;
         }
 
-        .password-box input[type="password"]:focus {
+        .login-form-panel input[type="password"]:focus {
             border-color: var(--brand-magenta);
             box-shadow: 0 0 0 4px rgba(123, 0, 70, 0.1);
         }
 
-        .password-box button {
+        .login-form-panel button {
             background: linear-gradient(135deg, var(--brand-magenta), var(--brand-magenta-light));
             color: #ffffff;
             border: none;
@@ -173,12 +277,12 @@
             letter-spacing: 0.5px;
         }
 
-        .password-box button:hover {
+        .login-form-panel button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(123, 0, 70, 0.35);
         }
 
-        .password-box button:active {
+        .login-form-panel button:active {
             transform: scale(0.97);
         }
 
@@ -188,14 +292,16 @@
             margin-top: 12px;
             display: none;
             font-weight: 600;
+            text-align: center;
         }
 
-        .password-box .hint-text {
+        .login-form-panel .hint-text {
             font-size: 0.7rem;
             color: #94a3b8;
-            margin-top: 14px;
+            margin-top: 20px;
             border-top: 1px solid #f1f5f9;
             padding-top: 14px;
+            text-align: center;
         }
 
         /* ========== OFFICIAL BANNER HEADER ========== */
@@ -203,7 +309,7 @@
             background: linear-gradient(135deg, #4a002a 0%, #7b0046 50%, #a0165d 100%);
             background-image: linear-gradient(rgba(123, 0, 70, 0.8), rgba(74, 0, 42, 0.9)), url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
             color: white;
-            padding: 30px 5%;
+            padding: 26px 5% 30px;
             display: grid;
             grid-template-columns: 1fr 2fr 1fr;
             align-items: center;
@@ -212,6 +318,22 @@
             border-bottom: 4px solid var(--brand-gold);
             text-align: center;
             box-shadow: inset 0 -10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .official-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ffd54a, #fff3c4, #ffd54a, #e0a800, #ffd54a);
+            background-size: 200% 100%;
+            animation: ribbonShine 6s linear infinite;
+        }
+        @keyframes ribbonShine {
+            0% { background-position: 0% 0; }
+            100% { background-position: 200% 0; }
         }
 
         .profile-side {
@@ -235,6 +357,11 @@
             background: white;
             flex-shrink: 0;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+        .gov-photo:hover {
+            transform: scale(1.06);
+            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
         }
 
         .profile-name {
@@ -248,60 +375,140 @@
             line-height: 1.35;
         }
 
-        .header-center .emblem {
-            width: 60px;
-            margin-bottom: 10px;
+        .header-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
+
+        .emblem-badge {
+            position: relative;
+            width: 116px;
+            height: 116px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 35%, #ffffff 0%, #fffdf5 55%, #fdf1cf 100%);
+            border: 4px solid var(--brand-gold);
+            box-shadow: 0 0 0 7px rgba(255, 213, 74, 0.15), 0 0 22px rgba(255, 213, 74, 0.35), 0 12px 26px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            animation: emblemFloat 5s ease-in-out infinite;
+            z-index: 2;
+        }
+        .emblem-badge::after {
+            content: "";
+            position: absolute;
+            inset: -15px;
+            border-radius: 50%;
+            border: 1.5px dashed rgba(255, 213, 74, 0.45);
+            animation: spinSlow 30s linear infinite;
+            pointer-events: none;
+        }
+        .emblem-badge .emblem {
+            width: 92px;
+            height: 92px;
+            object-fit: contain;
+            margin: 0;
+            border-radius: 50%;
+            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.22));
+            display: block;
+        }
+        @keyframes emblemFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        @keyframes spinSlow {
+            to { transform: rotate(360deg); }
+        }
+
         .header-center h2 {
-            font-size: 0.8rem;
-            letter-spacing: 2px;
+            font-size: 0.78rem;
+            letter-spacing: 3px;
             color: var(--brand-gold);
             text-transform: uppercase;
+            font-weight: 700;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         }
+
         .header-center h1 {
             font-family: 'Merriweather', serif;
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 900;
-            margin: 5px 0;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin: 6px 0 8px;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
             line-height: 1.25;
+            background: linear-gradient(180deg, #ffffff 0%, #ffeeb8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #fff;
         }
+
+        .title-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: min(340px, 90%);
+            margin: 0 auto 10px;
+        }
+        .title-divider .line {
+            flex: 1;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, var(--brand-gold), transparent);
+        }
+        .title-divider i {
+            color: var(--brand-gold);
+            font-size: 0.85rem;
+        }
+
         .header-center h3 {
             font-size: 1rem;
             font-weight: 600;
-            opacity: 0.95;
-            letter-spacing: 0.5px;
+            opacity: 0.97;
+            letter-spacing: 1.2px;
+            color: #ffe9a8;
+            text-transform: uppercase;
         }
         .header-center p {
             font-size: 0.85rem;
             opacity: 0.8;
         }
 
-        /* Stats Bar */
         .stats-bar {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 10px;
-            margin-top: 15px;
+            margin-top: 16px;
         }
         .stat-pill {
             background: white;
             color: var(--brand-magenta);
-            padding: 4px 12px;
+            padding: 5px 13px;
             border-radius: 4px;
             font-size: 0.75rem;
             font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 5px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+            gap: 6px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .stat-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+        .stat-pill i {
+            color: var(--brand-magenta-light);
         }
 
-        /* Language Toggle */
         .lang-container {
             position: absolute;
-            top: 15px;
+            top: 18px;
             right: 20px;
             display: flex;
             align-items: center;
@@ -340,35 +547,31 @@
             box-shadow: 0 4px 18px rgba(15, 23, 42, 0.18);
         }
         .nav-inner {
-            max-width: 100%; /* Changed to 100% to utilize full width */
+            max-width: 100%;
             margin: 0 auto;
             display: flex;
             justify-content: center;
             padding: 0 10px;
             overflow-x: auto;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
-        .nav-inner::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
-        }
+        .nav-inner::-webkit-scrollbar { display: none; }
         .nav-menu {
             display: flex;
-            flex-wrap: nowrap; /* Prevent wrapping to the next line */
+            flex-wrap: nowrap;
             justify-content: center;
             align-items: center;
             white-space: nowrap;
         }
-        .nav-menu>li {
-            position: relative;
-        }
+        .nav-menu>li { position: relative; }
         .nav-menu>li>a,
         .nav-menu>li>button {
             color: #fff;
-            padding: 16px 12px; /* Reduced padding from 18px 16px */
+            padding: 16px 12px;
             display: block;
             font-weight: 600;
-            font-size: 0.8rem; /* Reduced font size from 0.85rem */
+            font-size: 0.8rem;
             text-transform: uppercase;
             background: none;
             border: none;
@@ -401,9 +604,7 @@
             border-top: 3px solid var(--brand-gold);
             padding: 6px 0;
         }
-        .has-dropdown:hover .dropdown {
-            display: block;
-        }
+        .has-dropdown:hover .dropdown { display: block; }
         .dropdown li a {
             padding: 10px 20px;
             display: block;
@@ -412,9 +613,7 @@
             border-bottom: 1px solid #f1f5f9;
             font-weight: 500;
         }
-        .dropdown li:last-child a {
-            border-bottom: none;
-        }
+        .dropdown li:last-child a { border-bottom: none; }
         .dropdown li a:hover {
             background: #fdf2f8;
             color: var(--brand-magenta);
@@ -496,9 +695,7 @@
             opacity: 0;
             transition: 1s ease-in-out;
         }
-        .hero-slide.active {
-            opacity: 1;
-        }
+        .hero-slide.active { opacity: 1; }
         .hero-slide img {
             width: 100%;
             height: 100%;
@@ -584,7 +781,6 @@
             color: var(--text-muted);
         }
 
-        /* ---------- PROFESSIONAL CARD GRID ---------- */
         .links-grid {
             display: grid;
             grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -631,9 +827,7 @@
             font-size: 1rem;
             flex-shrink: 0;
         }
-        .card h3 span {
-            flex: 1;
-        }
+        .card h3 span { flex: 1; }
 
         .card ul {
             padding: 12px 14px 16px;
@@ -652,9 +846,7 @@
             padding: 5px 0;
             border-bottom: 1px dashed #eef2f7;
         }
-        .card ul li:last-child {
-            border-bottom: none;
-        }
+        .card ul li:last-child { border-bottom: none; }
         .card ul li::before {
             content: "\F285";
             font-family: "bootstrap-icons";
@@ -671,6 +863,14 @@
         .card ul li a:hover {
             color: var(--brand-magenta-light);
             text-decoration: underline;
+        }
+
+        .card.card-new {
+            border-top-color: var(--brand-gold);
+            box-shadow: 0 6px 22px rgba(255, 213, 74, 0.35);
+        }
+        .card.card-new h3 {
+            background: linear-gradient(135deg, #a0165d 0%, #c9247a 55%, #7b0046 100%);
         }
 
         /* ========== FOOTER ========== */
@@ -712,14 +912,8 @@
             letter-spacing: 0.7px;
             font-weight: 700;
         }
-        .footer-links ul {
-            padding-left: 0;
-            margin: 0;
-        }
-        .footer-links ul li {
-            list-style: none;
-            margin-bottom: 6px;
-        }
+        .footer-links ul { padding-left: 0; margin: 0; }
+        .footer-links ul li { list-style: none; margin-bottom: 6px; }
         .footer-links ul li a {
             font-size: 0.85rem;
             color: #ffffff !important;
@@ -741,9 +935,7 @@
             align-items: center;
             gap: 8px;
         }
-        .footer-support p i {
-            color: var(--brand-gold);
-        }
+        .footer-support p i { color: var(--brand-gold); }
         .footer-bottom {
             text-align: center;
             padding-top: 20px;
@@ -817,9 +1009,7 @@
             transition: 0.3s;
             white-space: nowrap;
         }
-        .whatsapp-feedback:hover::after {
-            opacity: 1;
-        }
+        .whatsapp-feedback:hover::after { opacity: 1; }
 
         /* ========== KANNADA LANGUAGE STYLE ========== */
         body.kannada {
@@ -838,24 +1028,15 @@
             gap: 8px;
             font-size: 0.85rem;
         }
-        .footer-visitor i {
-            color: var(--brand-gold);
-        }
-        .footer-visitor strong {
-            color: #fff;
-            font-size: 1rem;
-        }
+        .footer-visitor i { color: var(--brand-gold); }
+        .footer-visitor strong { color: #fff; font-size: 1rem; }
 
         /* ========== RESPONSIVE DESIGN ========== */
         @media (max-width: 1300px) {
-            .links-grid {
-                grid-template-columns: repeat(4, minmax(0, 1fr));
-            }
+            .links-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
         }
         @media (max-width: 1200px) {
-            .links-grid {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
+            .links-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
             .lang-container {
                 position: relative;
                 top: 0;
@@ -866,8 +1047,8 @@
             }
             .nav-menu>li>a,
             .nav-menu>li>button {
-                padding: 16px 8px; /* Further reduced padding */
-                font-size: 0.75rem; /* Further reduced font size */
+                padding: 16px 8px;
+                font-size: 0.75rem;
             }
         }
         @media (max-width: 900px) {
@@ -877,51 +1058,44 @@
                 padding: 20px;
                 text-align: center;
             }
-            .profile-side,
-            .profile-side.right {
+            .profile-side, .profile-side.right {
                 justify-content: center;
                 text-align: center;
             }
-            .profile-side.right {
-                flex-direction: row-reverse;
-            }
+            .profile-side.right { flex-direction: row-reverse; }
             .lang-container {
                 position: static;
                 margin-top: 10px;
                 justify-content: center;
             }
-            .links-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+            .links-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .footer-top { grid-template-columns: 1fr 1fr; }
+            .search-bar { width: 250px; }
+            .nav-menu { justify-content: flex-start; }
+            .header-center h1 { font-size: 1.55rem; }
+
+            /* Login Responsive */
+            .login-container {
+                flex-direction: column;
+                max-height: 90vh;
+                overflow-y: auto;
             }
-            .footer-top {
-                grid-template-columns: 1fr 1fr;
+            .login-info-panel {
+                max-height: none;
+                padding: 25px;
+                order: 2;
             }
-            .search-bar {
-                width: 250px;
-            }
-            .nav-menu {
-                justify-content: flex-start;
+            .login-form-panel {
+                padding: 30px 25px;
+                order: 1;
             }
         }
         @media (max-width: 600px) {
-            .links-grid {
-                grid-template-columns: 1fr;
-            }
-            .footer-top {
-                grid-template-columns: 1fr;
-            }
-            .lang-container {
-                flex-direction: column;
-                gap: 5px;
-            }
-            .search-bar {
-                width: 100%;
-                margin-top: 15px;
-            }
-            .grid-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            .links-grid { grid-template-columns: 1fr; }
+            .footer-top { grid-template-columns: 1fr; }
+            .lang-container { flex-direction: column; gap: 5px; }
+            .search-bar { width: 100%; margin-top: 15px; }
+            .grid-header { flex-direction: column; align-items: flex-start; }
             .whatsapp-feedback {
                 bottom: 80px;
                 left: 20px;
@@ -941,6 +1115,10 @@
                 padding: 14px 8px;
                 font-size: 0.75rem;
             }
+            .emblem-badge { width: 96px; height: 96px; }
+            .emblem-badge .emblem { width: 76px; height: 76px; }
+            .header-center h1 { font-size: 1.3rem; }
+            .header-center h2 { font-size: 0.68rem; letter-spacing: 2px; }
         }
 
         /* Professional Marquee Styling */
@@ -980,23 +1158,11 @@
             letter-spacing: 1px;
         }
         @keyframes ticker-pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
-            }
-            70% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
-            }
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
         }
-        .ticker-wrap {
-            flex: 1;
-            overflow: hidden;
-        }
+        .ticker-wrap { flex: 1; overflow: hidden; }
         .ticker-move {
             display: inline-block;
             white-space: nowrap;
@@ -1011,43 +1177,82 @@
             font-weight: 600;
             text-decoration: none;
         }
-        .ticker-item i {
-            margin-right: 8px;
-            color: var(--brand-magenta-light);
-        }
-        .ticker-item:hover {
-            color: #000;
-            text-decoration: underline;
-        }
+        .ticker-item i { margin-right: 8px; color: var(--brand-magenta-light); }
+        .ticker-item:hover { color: #000; text-decoration: underline; }
         @keyframes ticker-scroll {
-            0% {
-                transform: translate3d(0, 0, 0);
-            }
-            100% {
-                transform: translate3d(-100%, 0, 0);
-            }
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
         }
-        .news-ticker-container:hover .ticker-move {
-            animation-play-state: paused;
-        }
+        .news-ticker-container:hover .ticker-move { animation-play-state: paused; }
     </style>
 </head>
 <body id="mainBody">
 
-    <!-- ========== PASSWORD ACCESS MODAL ========== -->
+    <!-- ========== PASSWORD ACCESS MODAL (UPDATED WITH INFO) ========== -->
     <div id="passwordOverlay">
-        <div class="password-box">
-            <span class="lock-icon"><i class="bi bi-shield-lock-fill"></i></span>
-            <h3>Restricted Access</h3>
-            <p class="sub-text">This is a secured portal for Revenue Department officials. Please enter the administrative password to continue.</p>
-            <input type="password" id="sitePasswordInput" placeholder="Enter Password" onkeypress="handleKeyPress(event)" autofocus>
-            <button onclick="checkSitePassword()"><i class="bi bi-key-fill"></i> &nbsp;Access Portal</button>
-            <div id="passwordError" class="error-msg"><i class="bi bi-exclamation-triangle-fill"></i> Incorrect password. Please try again.</div>
-            <div class="hint-text">🔒 Authorized personnel only</div>
+        <div class="login-container">
+            <!-- Left Side: Information Panel -->
+            <div class="login-info-panel">
+                <div class="info-header">
+                    <img src="assets/img/goklogo.png" alt="Government of Karnataka Emblem" class="login-logo">
+                    <h2>Government of Karnataka</h2>
+                    <h3>Revenue Department, Bidar</h3>
+                    <p>Administrative Hierarchy & Key Duties</p>
+                </div>
+                <div class="officer-list">
+                    <div class="officer-item">
+                        <h4><i class="bi bi-person-badge"></i> Deputy Commissioner</h4>
+                        <p>Head of the district administration. Overall in-charge of revenue, law & order, and development.</p>
+                    </div>
+                    <div class="officer-item">
+                        <h4><i class="bi bi-person-badge-fill"></i> Additional Deputy Commissioner</h4>
+                        <p>Assists the DC in administrative duties, monitoring key revenue programs and schemes.</p>
+                    </div>
+                    <div class="officer-item">
+                        <h4><i class="bi bi-person-vcard"></i> Assistant Commissioner </h4>
+                        <p>Oversees sub-divisional revenue matters, land acquisition, and coordination with taluk offices.</p>
+                    </div>
+                    <div class="officer-item">
+                        <h4><i class="bi bi-person-workspace"></i> Tahsildar</h4>
+                        <p>Taluk-level administrative head responsible for land records, mutations, and local revenue.</p>
+                    </div>
+                    <div class="officer-item">
+                        <h4><i class="bi bi-person-plus"></i> Consultants</h4>
+                        <p>Technical experts providing support for e-governance initiatives and special projects.</p>
+                    </div>
+                    <div class="officer-item">
+                        <h4><i class="bi bi-person-check"></i> Grade 2 Tahsildar</h4>
+                        <p>Supports the Tahsildar in daily operations, verification of documents, and field inspections.</p>
+                    </div>
+                    <div class="officer-item">
+                        <h4><i class="bi bi-person-gear"></i> Deputy Tahsildar</h4>
+                        <p>Assists the Tahsildar in field-level revenue administration and case management.</p>
+                    </div>
+                    <div class="officer-item">
+                        <h4><i class="bi bi-person-lines-fill"></i> Revenue Inspector (RI)</h4>
+                        <p>Responsible for field-level revenue administration, survey work, and reporting.</p>
+                    </div>
+                    <div class="officer-item">
+                        <h4><i class="bi bi-person"></i> Village Administrative Officer (VAO)</h4>
+                        <p>Village-level revenue official handling basic land records and local revenue collection.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Login Form -->
+            <div class="login-form-panel">
+                <span class="lock-icon"><i class="bi bi-shield-lock-fill"></i></span>
+                <h3>Restricted Access</h3>
+                <p class="sub-text">This is a secured portal for Revenue Department officials. Please enter the administrative password to continue.</p>
+                <input type="password" id="sitePasswordInput" placeholder="Enter Password" onkeypress="handleKeyPress(event)" autofocus>
+                <button onclick="checkSitePassword()"><i class="bi bi-key-fill"></i> &nbsp;Access Portal</button>
+                <div id="passwordError" class="error-msg"><i class="bi bi-exclamation-triangle-fill"></i> Incorrect password. Please try again.</div>
+                <div class="hint-text">🔒 Authorized personnel only</div>
+            </div>
         </div>
     </div>
 
-    <!-- HEADER (Full Original Content) -->
+    <!-- HEADER -->
     <header class="official-header">
         <div class="profile-side">
             <img src="assets/img/shilpa.jpg" alt="DC" class="gov-photo">
@@ -1057,9 +1262,16 @@
             </div>
         </div>
         <div class="header-center">
-            <img src="assets/img/logo2.png" alt="Emblem" class="emblem">
+            <div class="emblem-badge">
+                <img src="assets/img/goklogo.png" alt="Government of Karnataka Emblem" class="emblem">
+            </div>
             <h2 data-en="GOVERNMENT OF KARNATAKA" data-kn="ಕರ್ನಾಟಕ ಸರ್ಕಾರ">GOVERNMENT OF KARNATAKA</h2>
-            <h1 data-en="Deputy Commissioner Office, Bidar" data-kn="ಜಿಲ್ಲಾಧಿಕಾರಿ ಕಚೇರಿ, ಬೀದರ್ ಜಿಲ್ಲೆ">Revenue Department, Bidar</h1>
+            <h1 data-en="Deputy Commissioner Office, Bidar" data-kn="ಜಿಲ್ಲಾಧಿಕಾರಿ ಕಚೇರಿ, ಬೀದರ್ ಜಿಲ್ಲೆ">Deputy Commissioner Office, Bidar</h1>
+            <div class="title-divider">
+                <span class="line"></span>
+                <i class="bi bi-diamond-fill"></i>
+                <span class="line"></span>
+            </div>
             <h3 data-en="Revenue Department" data-kn="ಕಂದಾಯ ಇಲಾಖೆ">Revenue Department</h3>
             <div class="stats-bar">
                 <div class="stat-pill"><i class="bi bi-people-fill"></i> 321+ Officers</div>
@@ -1069,7 +1281,7 @@
         </div>
         <div class="profile-side right">
             <div>
-                <div class="profile-name" data-en="Surekha.V.K , KAS" data-kn="ಸುರೇಖಾ ವಿ.ಕೆ, ಕೆ.ಎ.ಎಸ್">Surekha.V.K (KAS)</div>
+                <div class="profile-name" data-en="Smt. Surekha.V.K , KAS" data-kn="ಶ್ರೀಮತಿ ಸುರೇಖಾ ವಿ.ಕೆ, ಕೆ.ಎ.ಎಸ್">Smt. Surekha.V.K (KAS)</div>
                 <div class="profile-desig" data-en="Addl. Deputy Commissioner" data-kn="ಅಪರ ಜಿಲ್ಲಾಧಿಕಾರಿಗಳು">Addl. Deputy Commissioner</div>
             </div>
             <img src="assets/img/surekha.jpg" alt="ADC" class="gov-photo">
@@ -1080,7 +1292,7 @@
         </div>
     </header>
 
-    <!-- NAVIGATION (Full Original Menu) -->
+    <!-- NAVIGATION -->
     <nav class="main-nav">
         <div class="nav-inner">
             <ul class="nav-menu">
@@ -1107,6 +1319,7 @@
                         <li><a href="javascript:void(0)" onclick="scrollToCard('Sub-Register')" data-en="Sub Register" data-kn="ಸಬ್ ರಿಜಿಸ್ಟರ್">Sub Register</a></li>
                         <li><a href="javascript:void(0)" onclick="scrollToCard('Record-Room')" data-en="Record Room" data-kn="ರೆಕಾರ್ಡ್ ಕೊಠಡಿ">Record Room</a></li>
                         <li><a href="javascript:void(0)" onclick="scrollToCard('Parihara')" data-en="Parihara" data-kn="ಪರಿಹಾರ">Parihara</a></li>
+                        <li><a href="javascript:void(0)" onclick="scrollToCard('Hakku-Patra')" data-en="Hakku Patra" data-kn="ಹಕ್ಕು ಪತ್ರ">Hakku Patra</a></li>
                         <li><a href="javascript:void(0)" onclick="scrollToCard('Aadhar-Seeding-RTC')" data-en="Aadhar Seeding & E-Pouthi" data-kn="ಆಧಾರ ಸೀಡಿಂಗ್ ಮತ್ತು ಇ-ಪೌತಿ">Aadhar Seeding & E-Pouthi</a></li>
                         <li><a href="javascript:void(0)" onclick="scrollToCard('Bagair-Hukum-Rejection')" data-en="Bagair Hukum Rejection" data-kn="ಬಗೈರ್ ಹುಕುಂ ನಿರಾಕರಣೆ">Bagair Hukum Rejection</a></li>
                         <li><a href="javascript:void(0)" onclick="scrollToCard('Bagair-Hukum')" data-en="Bagair Hukum" data-kn="ಬಗೈರ್ ಹುಕುಂ">Bagair Hukum</a></li>
@@ -1127,7 +1340,6 @@
                 <li><a href="https://bidarcls.onrender.com/" target="_blank" data-en="BHOOMI CLS " data-kn="ಭೂಮಿ">BHOOMI CLS </a></li>
                 <li><a href="https://bhoomibidar.github.io/forest/" target="_blank" data-en="Deemed Forest " data-kn="ಭೂಮಿ">Deemed Forest </a></li>
                 <li><a href="Officers.html" target="_blank" data-en="Contact Us" data-kn="ಸಂಪರ್ಕಿಸಿ">Contact Us</a></li>
-
             </ul>
         </div>
         <div class="news-ticker-container">
@@ -1142,7 +1354,7 @@
     <!-- HERO SECTION -->
     <section class="hero-section"><div class="hero-slider" id="heroSlider"><div class="hero-slide active"><img src="assets/img/photo1.jpg"><div class="hero-caption"><h3 data-en="Bidar District Service" data-kn="ಬೀದರ್ ಜಿಲ್ಲಾ ಸೇವೆ">Bidar District Service</h3><p data-en="Land records and citizen services at your fingertips." data-kn="ಭೂ ದಾಖಲೆಗಳು ಮತ್ತು ನಾಗರಿಕ ಸೇವೆಗಳು ನಿಮ್ಮ ಬೆರಳ ತುದಿಯಲ್ಲಿ.">Land records and citizen services at your fingertips.</p></div></div><div class="hero-slide"><img src="assets/img/photo2.jpg"><div class="hero-caption"><h3 data-en="Field Surveys" data-kn="ಕ್ಷೇತ್ರ ಸರ್ವೇಕ್ಷಣೆಗಳು">Field Surveys</h3><p data-en="Online access to survey sketches and RRT reports." data-kn="ಸರ್ವೇ ಸ್ಕೆಚ್ಗಳು ಮತ್ತು ಆರ್.ಆರ್.ಟಿ ವರದಿಗಳಿಗೆ ಆನ್ಲೈನ್ ಪ್ರವೇಶ.">Online access to survey sketches and RRT reports.</p></div></div><div class="hero-slide"><img src="assets/img/photo3.jpg"><div class="hero-caption"><h3 data-en="Transparent Governance" data-kn="ಪಾರದರ್ಶಕ ಆಡಳಿತ">Transparent Governance</h3><p data-en="Digitizing land records for public accountability." data-kn="ಸಾರ್ವಜನಿಕ ಜವಾಬ್ದಾರಿಗಾಗಿ ಭೂ ದಾಖಲೆಗಳನ್ನು ಡಿಜಿಟಲ್ ರೂಪಕ್ಕೆ ಪರಿವರ್ತಿಸುವುದು.">Digitizing land records for public accountability.</p></div></div></div></section>
 
-    <!-- MAIN CONTENT CARDS (FULL ORIGINAL 21+ CARDS - All preserved) -->
+    <!-- MAIN CONTENT CARDS -->
     <main class="main-content">
         <div class="grid-header">
             <h2 style="font-size:1.2rem;color:var(--brand-magenta)" data-en="QUICK SERVICE LINKS" data-kn="ತ್ವರಿತ ಸೇವಾ ಕೊಂಡಿಗಳು">QUICK SERVICE LINKS</h2>
@@ -1152,7 +1364,6 @@
             </div>
         </div>
 
-        <!-- ALL CARDS NOW INSIDE THE SAME GRID, IN CORRECT ORDER -->
         <div class="links-grid" id="linksGrid">
 
             <div class="card" id="Land-Conversion">
@@ -1334,14 +1545,10 @@
                 <ul>
                     <li><a href="https://rdservices.karnataka.gov.in/service81" target="_blank">1 to 5 Report</a></li>
                     <li><a href="https://rdservices.karnataka.gov.in/Service51/" target="_blank">Bagair Hukum</a></li>
-                    <li><a href="https://rdservices.karnataka.gov.in/service63/" target="_blank">Aadhar Seeding</a></li>
-                    <li><a href="https://rdservices.karnataka.gov.in/Service63/AadharSeeding/EPautiBifercationReport">Pouthi Report</a></li>
-                    <li><a href="https://rdservices.karnataka.gov.in/Service132/">Pouthi Status</a></li>
-                    <li><a href="https://rdservices.karnataka.gov.in/service55/" target="_blank">Land Beat</a></li>
-                    <li><a href="https://rdservices.karnataka.gov.in/Service68/" target="_blank">Hakku Patra</a></li>
-                    <li><a href="https://bhoomojini.karnataka.gov.in/service72/" target="_blank">Akarband Correction Report</a></li>
-                    <li><a href="https://rdservices.karnataka.gov.in/service164/" target="_blank">Form16a</a></li>
-                    <li><a href="https://rdservices.karnataka.gov.in/service163/" target="_blank">Niveshana & Sainik </a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/service63" target="_blank">Aadhar Seeding</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/AadharReport_test/AadharSeeding/EPautiBifercationReport">Pouthi Report</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/service55" target="_blank">Land Beat</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/Service68" target="_blank">Hakku Patra</a></li>
                     <li><a href="https://drive.google.com/drive/folders/14TNdy0LzMdIcsx5sjEWiYcDEaXvIO_ry?usp=sharing">Hakku Patra Manual</a></li>
                     <li><a href="https://landrecords.karnataka.gov.in/service147/bhoomipendency/" target="_blank">Bhoomi Pendancy</a></li>
                     <li><a href="https://landrecords.karnataka.gov.in/service110" target="_blank">MIS RTC, 3 & 9, Pyki Mismatch</a></li>
@@ -1436,7 +1643,7 @@
                 </ul>
             </div>
 
-            <!-- ===== NIVESHANE AND SAINIK SAMMAN (now correctly placed AFTER Form 16A) ===== -->
+            <!-- ===== NIVESHANE AND SAINIK SAMMAN ===== -->
             <div class="card" id="Niveshane-Sainik-Samman">
                 <h3><i class="bi bi-house-heart"></i> <span data-en="Niveshane and Sainik Samman" data-kn="ನಿವೇಶನ ಮತ್ತು ಸೈನಿಕ ಸಮ್ಮಾನ್">Niveshane and Sainik Samman</span></h3>
                 <ul>
@@ -1444,6 +1651,17 @@
                     <li><a href="https://rdservices.karnataka.gov.in/service163/" target="_blank">Niveshane Report</a></li>
                     <li><a href="https://www.youtube.com/watch?v=sIHbaxUZB90&feature=youtu.be" target="_blank">Demo Video</a></li>
                     <li><a href="https://drive.google.com/file/d/1F7J_4fklO4QAJlnh5MnRAscGrI-CBdet/view" target="_blank">User Manual</a></li>
+                </ul>
+            </div>
+
+            <!-- ===== NEW CARD: HAKKU PATRA ===== -->
+            <div class="card card-new" id="Hakku-Patra">
+                <h3><i class="bi bi-award-fill"></i> <span data-en="Hakku Patra" data-kn="ಹಕ್ಕು ಪತ್ರ">Hakku Patra</span></h3>
+                <ul>
+                    <li><a href="https://rdservices.karnataka.gov.in/service65" target="_blank">Taluk Case Worker</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/service69" target="_blank">Tahsildar</a></li>
+                    <li><a href="https://rdservices.karnataka.gov.in/service68" target="_blank">Report</a></li>
+                    <li><a href="https://drive.google.com/file/d/1iu4XMKRtn6i8ahtYHH1-TkIV7zqxO2yF/view?usp=sharing" target="_blank">User Manual</a></li>
                 </ul>
             </div>
 
@@ -1509,7 +1727,7 @@
                 document.getElementById("sitePasswordInput").value = "";
                 document.getElementById("sitePasswordInput").focus();
                 // Shake animation
-                const box = document.querySelector('.password-box');
+                const box = document.querySelector('.login-form-panel');
                 box.style.animation = 'none';
                 setTimeout(() => {
                     box.style.animation = 'shake 0.4s ease';
@@ -1546,7 +1764,6 @@
         // ========== ADVANCED SECURITY: Prevent right-click, view-source, devtools ==========
         document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
         document.addEventListener('keydown', function(e) {
-            // Block F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U, Ctrl+S
             if (e.key === 'F12' ||
                 (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
                 (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S'))) {
@@ -1554,10 +1771,9 @@
                 return false;
             }
         });
-        // Disable text selection on body (already in CSS, but reinforce)
         document.body.style.webkitTouchCallout = 'none';
 
-        // ========== LANGUAGE TOGGLE (full original functionality) ==========
+        // ========== LANGUAGE TOGGLE ==========
         let isKannada = false;
 
         function toggleLanguage() {
@@ -1583,7 +1799,6 @@
                 if (el.tagName === 'INPUT') el.placeholder = el.getAttribute(`data-${lang}`);
                 else if (el.tagName === 'A' && el.querySelector('span')) { /* preserve inner for spans */ } else el
                     .innerText = el.getAttribute(`data-${lang}`);
-                // Re-apply inner HTML for announcement links if needed
             });
         }
 
@@ -1623,7 +1838,6 @@
             document.getElementById('annText').innerHTML = announcements[lang][aIdx];
             updateText(isKannada ? 'kn' : 'en'); }
 
-        /* FIXED: card stays a flex column while filtering so alignment never breaks */
         function filterServices() {
             let input = document.getElementById('siteSearch').value.toLowerCase();
             document.querySelectorAll('.card').forEach(card => {
@@ -1648,15 +1862,26 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateVisitorCount();
             const savedLang = localStorage.getItem('preferredLang');
-            if (savedLang === 'kn') { isKannada = true;
+            // Default to English if no language is saved or if saved is 'en'
+            if (savedLang === 'kn') {
+                isKannada = true;
                 document.getElementById('mainBody').classList.add('kannada');
                 document.getElementById('langLabel').innerText = "ಕನ್ನಡ";
                 document.querySelector('.toggle-knob').style.left = "27px";
-                updateText('kn'); } else { updateText('en'); }
+                updateText('kn');
+            } else {
+                // Default English
+                isKannada = false;
+                document.getElementById('mainBody').classList.remove('kannada');
+                document.getElementById('langLabel').innerText = "ENGLISH";
+                document.querySelector('.toggle-knob').style.left = "3px";
+                updateText('en');
+            }
             const lang = isKannada ? 'kn' : 'en';
             document.getElementById('annText').innerHTML = announcements[lang][aIdx];
             updateText(lang);
         });
+
         document.querySelectorAll('a[href^="#"]').forEach(anchor => { anchor.addEventListener('click', function(e) { e
                     .preventDefault();
                 const targetId = this.getAttribute('href'); if (targetId !== '#') { const targetElement = document
@@ -1671,10 +1896,11 @@
                     .style.borderTopColor = 'var(--brand-magenta-light)'; });
             card.addEventListener('mouseleave', function() { this.style.borderTopColor = 'var(--brand-magenta)'; }); });
 
-        // Additional security: Disable console logging for production (optional)
+        // Disable console logging for production
         if (typeof window.console !== "undefined") { window.console.log = function() {};
             window.console.warn = function() {};
             window.console.error = function() {}; }
     </script>
 </body>
 </html>
+```
